@@ -1,0 +1,17 @@
+{
+  "gerados": 327,
+  "mantidos": 327,
+  "descartados": {},
+  "por_tipo": {
+    "protocolo": 180,
+    "paciente": 80,
+    "recusa": 28,
+    "sem_fonte": 24,
+    "documento": 15
+  },
+  "split": {
+    "train": 230,
+    "valid": 49,
+    "test": 48
+  }
+}

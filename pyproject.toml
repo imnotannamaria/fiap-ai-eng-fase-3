@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hospital-assistant"
+version = "0.1.0"
+description = "Assistente virtual médico com fine-tuning, LangChain e LangGraph (Tech Challenge FIAP Fase 3)"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "mlx-lm>=0.22",
+  "langchain>=0.3,<0.4",
+  "langchain-core>=0.3,<0.4",
+  "langchain-community>=0.3,<0.4",
+  "langchain-ollama>=0.3,<0.4",
+  "langgraph>=0.3,<0.7",
+  "pydantic>=2",
+  "faker>=30",
+  "rank-bm25>=0.2.2",
+  "fastapi>=0.115",
+  "uvicorn>=0.34",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

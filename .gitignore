@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+models/
+logs/
+.pytest_cache/
+*.egg-info/
+
+# contexto de trabalho, nao vai pro git
+CONTEXTO.md
+fases.md
+data/synthetic/*.db
