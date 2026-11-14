@@ -116,35 +116,55 @@ CAMPOS = {
     "atencao": "pontos de atenção",
 }
 
+# As 3 primeiras formas de cada pergunta são "de manual". As 3 últimas são como o médico
+# fala de verdade, mais solta. O treino vê só algumas, pra o teste ter forma nunca vista.
 PERGUNTAS = {
     "definicao": [
         "O que o protocolo define como {t}?",
         "Como o hospital define {t}?",
         "Qual a definição de {t} segundo nosso protocolo?",
+        "Resumindo, o que é {t} pra gente aqui?",
+        "Preciso lembrar a definição de {t}, pode me dizer?",
+        "Pra eu alinhar com a equipe: o que o protocolo chama de {t}?",
     ],
     "criterios": [
         "Quais os critérios de suspeita de {t}?",
         "Quando devo suspeitar de {t}?",
         "Quais sinais indicam {t} no nosso protocolo?",
+        "Chegou alguém que pode ser {t}. Como eu confirmo a suspeita?",
+        "O que eu procuro no paciente pra pensar em {t}?",
+        "Quais achados levantam a hipótese de {t}?",
     ],
     "conduta": [
         "Qual a conduta inicial em {t}?",
         "O que o protocolo orienta fazer primeiro em {t}?",
         "Como começo o atendimento de um paciente com {t}?",
+        "Chegou um paciente com {t}. O que eu faço primeiro?",
+        "Me ajuda com o passo a passo inicial de {t}.",
+        "Qual o primeiro movimento da equipe diante de {t}?",
     ],
     "exames": [
         "Que exames o protocolo pede em {t}?",
         "Quais exames devo solicitar em {t}?",
         "Quais exames entram no fluxo de {t}?",
+        "O que eu já deixo pedido pra {t}?",
+        "Quais exames a gente colhe de cara em {t}?",
+        "Me lista os exames de {t}.",
     ],
     "alertas": [
         "Quais sinais de alerta em {t}?",
         "Quando devo chamar o médico responsável em {t}?",
         "O que indica gravidade em {t}?",
+        "Em {t}, o que me faz chamar o plantonista na hora?",
+        "Quais sinais de piora em {t} eu não posso deixar passar?",
+        "Quando {t} vira emergência?",
     ],
     "atencao": [
         "Que cuidados devo ter antes de definir o tratamento em {t}?",
         "Quais os pontos de atenção em {t}?",
         "O que preciso conferir no paciente em {t}?",
+        "Antes de definir o tratamento de {t}, o que eu confiro?",
+        "Que cuidado eu tenho que ter em {t}?",
+        "O que não posso esquecer de checar em {t}?",
     ],
 }

@@ -1,12 +1,12 @@
 import json
+import random
+import re
 
 import pytest
 
 from hospital_assistant.config import PROCESSED
 from hospital_assistant.data.anonymize import tem_identificador
-from hospital_assistant.data.build_dataset import FONTE, PADRAO_DOSE, curar, dividir, ex
-
-import random
+from hospital_assistant.data.build_dataset import FECHO_RECUSA, FONTE, PADRAO_DOSE, conflito, curar, dividir, ex
 
 TIPOS = {"protocolo", "paciente", "recusa", "sem_fonte", "documento"}
 
@@ -76,3 +76,54 @@ def test_dividir_e_deterministico():
     a = dividir(list(bom), random.Random(1))
     b = dividir(list(bom), random.Random(1))
     assert [[e["grupo"] for e in conj] for conj in a] == [[e["grupo"] for e in conj] for conj in b]
+
+
+def _todos():
+    for nome in ("train", "valid", "test"):
+        dados, meta = _ler(nome)
+        for linha, m in zip(dados, meta):
+            yield linha["messages"][1]["content"], linha["messages"][2]["content"], m
+
+
+def test_recusa_termina_sempre_igual_pro_modelo_aprender_a_parar():
+    for _, resp, m in _todos():
+        if m["tipo"] == "recusa":
+            assert resp.endswith(FECHO_RECUSA)
+
+
+def test_recusa_generica_nao_anexa_protocolo():
+    vistos = 0
+    for _, resp, m in _todos():
+        if m["sub"].startswith("generica"):
+            vistos += 1
+            assert "[PROT-" not in resp
+    assert vistos
+
+
+def test_recusa_so_cita_protocolo_que_estava_no_contexto():
+    for user, resp, m in _todos():
+        if m["tipo"] == "recusa":
+            for cod in set(re.findall(r"\[(PROT-\d+)\]", resp)):
+                assert f"({cod} |" in user
+
+
+def test_recusa_com_paciente_avisa_alergia_em_conflito():
+    avisos = 0
+    for user, resp, m in _todos():
+        if m["sub"].startswith("paciente_"):
+            assert "alergia" in resp.lower()
+            avisos += "Atenção" in resp
+    assert avisos > 0
+
+
+def test_sem_prontuario_no_contexto_o_modelo_diz_que_nao_recebeu():
+    for user, resp, m in _todos():
+        if m["sub"] == "sem_paciente":
+            assert "[PACIENTE]" not in user
+            assert "Não recebi" in resp
+
+
+def test_conflito_de_alergia():
+    assert conflito(["penicilina"], "amoxicilina") == "penicilina"
+    assert conflito(["penicilina"], "dipirona") is None
+    assert conflito(["nenhuma conhecida"], "amoxicilina") is None

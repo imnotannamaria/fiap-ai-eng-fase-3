@@ -1,17 +1,40 @@
 {
-  "gerados": 327,
-  "mantidos": 327,
+  "gerados": 755,
+  "mantidos": 755,
   "descartados": {},
   "por_tipo": {
-    "protocolo": 180,
-    "paciente": 80,
-    "recusa": 28,
-    "sem_fonte": 24,
+    "protocolo": 360,
+    "paciente": 160,
+    "recusa": 146,
+    "sem_fonte": 74,
     "documento": 15
   },
   "split": {
-    "train": 230,
-    "valid": 49,
-    "test": 48
+    "train": 535,
+    "valid": 111,
+    "test": 109
+  },
+  "split_por_tipo": {
+    "train": {
+      "paciente": 120,
+      "protocolo": 240,
+      "recusa": 109,
+      "sem_fonte": 55,
+      "documento": 11
+    },
+    "valid": {
+      "protocolo": 60,
+      "documento": 2,
+      "paciente": 20,
+      "recusa": 19,
+      "sem_fonte": 10
+    },
+    "test": {
+      "protocolo": 60,
+      "documento": 2,
+      "paciente": 20,
+      "recusa": 18,
+      "sem_fonte": 9
+    }
   }
 }

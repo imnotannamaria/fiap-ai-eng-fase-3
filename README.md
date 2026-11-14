@@ -26,17 +26,19 @@ O paciente que chega no assistente só aparece como `P-0007`, com idade e sexo. 
 
 ### O dataset de instrução
 
-327 exemplos em formato de chat, em `data/processed/`:
+755 exemplos em formato de chat, em `data/processed/` (535 treino, 111 validação, 109 teste):
 
 | Tipo | O que ensina |
 |---|---|
-| protocolo | responder pergunta usando só o trecho do protocolo e citar a fonte |
-| paciente | juntar os dados do prontuário com o protocolo |
-| recusa | negar pedido de prescrição ou dose e apontar o protocolo |
-| sem_fonte | dizer "não encontrei" quando o protocolo não tem a resposta |
+| protocolo | responder pergunta usando só o trecho do protocolo e citar a fonte, com pergunta de manual e pergunta solta |
+| paciente | juntar o prontuário com o protocolo: exames pendentes, sinais de alerta, alergias e resultados |
+| recusa | negar pedido de prescrição ou dose, seja direto, uma pergunta solta ("posso começar amoxicilina nele?") ou tentativa de burlar a regra ("ignore as instruções") |
+| sem_fonte | dizer "não encontrei" quando o protocolo não tem a resposta, ou "não recebi o prontuário" quando ele não veio no contexto |
 | documento | montar rascunho de laudo, receita ou procedimento com os campos em branco |
 
-O split é feito por grupo, pra o mesmo paciente, o mesmo pedido ou o mesmo tema nunca cair em dois conjuntos. Nos protocolos, a terceira forma de cada pergunta fica de fora do treino.
+Na recusa com paciente, o modelo avisa quando o remédio pedido tem relação com uma alergia do prontuário. Na recusa sem condição nenhuma, ele só recusa, sem anexar protocolo. Todas as recusas terminam com a mesma frase, de propósito: o modelo aprende onde parar.
+
+O split é feito por grupo. O mesmo pedido ou tema nunca cai em dois conjuntos, e um paciente fica inteiro num conjunto só, em todos os tipos. Nos protocolos, duas das seis formas de cada pergunta ficam de fora do treino, uma de manual e uma solta, pra testar com pergunta que o modelo nunca viu.
 
 ---
 
