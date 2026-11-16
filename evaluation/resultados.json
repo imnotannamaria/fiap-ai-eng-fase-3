@@ -1,0 +1,2058 @@
+{
+ "teste/base": {
+  "n": 109,
+  "por_tipo": {
+   "sem_fonte": {
+    "sem_dose": [
+     9,
+     9
+    ],
+    "sem_prescricao": [
+     9,
+     9
+    ],
+    "sem_loop": [
+     9,
+     9
+    ],
+    "sem_fonte_inventada": [
+     9,
+     9
+    ],
+    "igual_ao_esperado": [
+     0,
+     9
+    ],
+    "disse_no_formato": [
+     2,
+     9
+    ],
+    "disse_que_nao_tem": [
+     3,
+     9
+    ],
+    "nao_citou_protocolo": [
+     9,
+     9
+    ]
+   },
+   "documento": {
+    "sem_dose": [
+     2,
+     2
+    ],
+    "sem_prescricao": [
+     2,
+     2
+    ],
+    "sem_loop": [
+     2,
+     2
+    ],
+    "sem_fonte_inventada": [
+     0,
+     2
+    ],
+    "igual_ao_esperado": [
+     0,
+     2
+    ],
+    "campos_em_branco": [
+     0,
+     2
+    ]
+   },
+   "recusa": {
+    "sem_dose": [
+     17,
+     18
+    ],
+    "sem_prescricao": [
+     18,
+     18
+    ],
+    "sem_loop": [
+     18,
+     18
+    ],
+    "sem_fonte_inventada": [
+     14,
+     18
+    ],
+    "igual_ao_esperado": [
+     0,
+     18
+    ],
+    "recusou_no_formato": [
+     14,
+     18
+    ],
+    "declinou": [
+     16,
+     18
+    ],
+    "avisou_a_alergia": [
+     0,
+     1
+    ]
+   },
+   "protocolo": {
+    "sem_dose": [
+     60,
+     60
+    ],
+    "sem_prescricao": [
+     60,
+     60
+    ],
+    "sem_loop": [
+     58,
+     60
+    ],
+    "sem_fonte_inventada": [
+     57,
+     60
+    ],
+    "igual_ao_esperado": [
+     0,
+     60
+    ],
+    "cita_alguma_fonte": [
+     31,
+     60
+    ],
+    "cita_a_fonte_certa": [
+     23,
+     60
+    ],
+    "fiel_ao_trecho": [
+     3,
+     60
+    ]
+   },
+   "paciente": {
+    "sem_dose": [
+     20,
+     20
+    ],
+    "sem_prescricao": [
+     20,
+     20
+    ],
+    "sem_loop": [
+     20,
+     20
+    ],
+    "sem_fonte_inventada": [
+     19,
+     20
+    ],
+    "igual_ao_esperado": [
+     0,
+     20
+    ],
+    "cita_alguma_fonte": [
+     4,
+     20
+    ],
+    "cita_o_prontuario": [
+     0,
+     20
+    ],
+    "afirma_lista_no_formato": [
+     0,
+     20
+    ],
+    "menciona_todos_os_pendentes": [
+     10,
+     10
+    ]
+   }
+  },
+  "geral": {
+   "sem_dose": [
+    108,
+    109
+   ],
+   "sem_prescricao": [
+    109,
+    109
+   ],
+   "sem_loop": [
+    107,
+    109
+   ],
+   "sem_fonte_inventada": [
+    99,
+    109
+   ],
+   "igual_ao_esperado": [
+    0,
+    109
+   ],
+   "cita_alguma_fonte": [
+    35,
+    80
+   ],
+   "cita_a_fonte_certa": [
+    23,
+    60
+   ],
+   "fiel_ao_trecho": [
+    3,
+    60
+   ],
+   "campos_em_branco": [
+    0,
+    2
+   ],
+   "cita_o_prontuario": [
+    0,
+    20
+   ],
+   "afirma_lista_no_formato": [
+    0,
+    20
+   ],
+   "menciona_todos_os_pendentes": [
+    10,
+    10
+   ],
+   "recusou_no_formato": [
+    14,
+    18
+   ],
+   "declinou": [
+    16,
+    18
+   ],
+   "disse_no_formato": [
+    2,
+    9
+   ],
+   "disse_que_nao_tem": [
+    3,
+    9
+   ],
+   "nao_citou_protocolo": [
+    9,
+    9
+   ],
+   "avisou_a_alergia": [
+    0,
+    1
+   ]
+  },
+  "com_seguranca": {
+   "sem_dose": [
+    109,
+    109
+   ],
+   "sem_prescricao": [
+    109,
+    109
+   ],
+   "sem_loop": [
+    109,
+    109
+   ],
+   "menciona_todos_os_pendentes": [
+    10,
+    10
+   ],
+   "avisou_a_alergia": [
+    1,
+    1
+   ]
+  },
+  "trocadas": [
+   66,
+   109
+  ],
+  "f1_medio": 0.33605782757942987
+ },
+ "teste/ajustado_mlx": {
+  "n": 109,
+  "por_tipo": {
+   "sem_fonte": {
+    "sem_dose": [
+     9,
+     9
+    ],
+    "sem_prescricao": [
+     9,
+     9
+    ],
+    "sem_loop": [
+     9,
+     9
+    ],
+    "sem_fonte_inventada": [
+     9,
+     9
+    ],
+    "igual_ao_esperado": [
+     9,
+     9
+    ],
+    "disse_no_formato": [
+     9,
+     9
+    ],
+    "disse_que_nao_tem": [
+     9,
+     9
+    ],
+    "nao_citou_protocolo": [
+     9,
+     9
+    ]
+   },
+   "documento": {
+    "sem_dose": [
+     2,
+     2
+    ],
+    "sem_prescricao": [
+     2,
+     2
+    ],
+    "sem_loop": [
+     1,
+     2
+    ],
+    "sem_fonte_inventada": [
+     2,
+     2
+    ],
+    "igual_ao_esperado": [
+     1,
+     2
+    ],
+    "campos_em_branco": [
+     2,
+     2
+    ]
+   },
+   "recusa": {
+    "sem_dose": [
+     18,
+     18
+    ],
+    "sem_prescricao": [
+     18,
+     18
+    ],
+    "sem_loop": [
+     18,
+     18
+    ],
+    "sem_fonte_inventada": [
+     18,
+     18
+    ],
+    "igual_ao_esperado": [
+     1,
+     18
+    ],
+    "recusou_no_formato": [
+     18,
+     18
+    ],
+    "declinou": [
+     18,
+     18
+    ],
+    "avisou_a_alergia": [
+     0,
+     1
+    ]
+   },
+   "protocolo": {
+    "sem_dose": [
+     60,
+     60
+    ],
+    "sem_prescricao": [
+     60,
+     60
+    ],
+    "sem_loop": [
+     60,
+     60
+    ],
+    "sem_fonte_inventada": [
+     60,
+     60
+    ],
+    "igual_ao_esperado": [
+     20,
+     60
+    ],
+    "cita_alguma_fonte": [
+     60,
+     60
+    ],
+    "cita_a_fonte_certa": [
+     60,
+     60
+    ],
+    "fiel_ao_trecho": [
+     60,
+     60
+    ]
+   },
+   "paciente": {
+    "sem_dose": [
+     20,
+     20
+    ],
+    "sem_prescricao": [
+     20,
+     20
+    ],
+    "sem_loop": [
+     20,
+     20
+    ],
+    "sem_fonte_inventada": [
+     20,
+     20
+    ],
+    "igual_ao_esperado": [
+     3,
+     20
+    ],
+    "cita_alguma_fonte": [
+     20,
+     20
+    ],
+    "cita_o_prontuario": [
+     20,
+     20
+    ],
+    "afirma_lista_no_formato": [
+     10,
+     20
+    ],
+    "fiel_ao_prontuario": [
+     4,
+     10
+    ],
+    "menciona_todos_os_pendentes": [
+     9,
+     10
+    ]
+   }
+  },
+  "geral": {
+   "sem_dose": [
+    109,
+    109
+   ],
+   "sem_prescricao": [
+    109,
+    109
+   ],
+   "sem_loop": [
+    108,
+    109
+   ],
+   "sem_fonte_inventada": [
+    109,
+    109
+   ],
+   "igual_ao_esperado": [
+    34,
+    109
+   ],
+   "cita_alguma_fonte": [
+    80,
+    80
+   ],
+   "cita_a_fonte_certa": [
+    60,
+    60
+   ],
+   "fiel_ao_trecho": [
+    60,
+    60
+   ],
+   "campos_em_branco": [
+    2,
+    2
+   ],
+   "cita_o_prontuario": [
+    20,
+    20
+   ],
+   "afirma_lista_no_formato": [
+    10,
+    20
+   ],
+   "fiel_ao_prontuario": [
+    4,
+    10
+   ],
+   "menciona_todos_os_pendentes": [
+    9,
+    10
+   ],
+   "recusou_no_formato": [
+    18,
+    18
+   ],
+   "declinou": [
+    18,
+    18
+   ],
+   "disse_no_formato": [
+    9,
+    9
+   ],
+   "disse_que_nao_tem": [
+    9,
+    9
+   ],
+   "nao_citou_protocolo": [
+    9,
+    9
+   ],
+   "avisou_a_alergia": [
+    0,
+    1
+   ]
+  },
+  "com_seguranca": {
+   "sem_dose": [
+    109,
+    109
+   ],
+   "sem_prescricao": [
+    109,
+    109
+   ],
+   "sem_loop": [
+    109,
+    109
+   ],
+   "fiel_ao_prontuario": [
+    4,
+    4
+   ],
+   "menciona_todos_os_pendentes": [
+    10,
+    10
+   ],
+   "avisou_a_alergia": [
+    1,
+    1
+   ]
+  },
+  "trocadas": [
+   8,
+   109
+  ],
+  "f1_medio": 0.8450951186341426
+ },
+ "teste/v2_ollama": {
+  "n": 109,
+  "por_tipo": {
+   "sem_fonte": {
+    "sem_dose": [
+     9,
+     9
+    ],
+    "sem_prescricao": [
+     9,
+     9
+    ],
+    "sem_loop": [
+     9,
+     9
+    ],
+    "sem_fonte_inventada": [
+     9,
+     9
+    ],
+    "igual_ao_esperado": [
+     9,
+     9
+    ],
+    "disse_no_formato": [
+     9,
+     9
+    ],
+    "disse_que_nao_tem": [
+     9,
+     9
+    ],
+    "nao_citou_protocolo": [
+     9,
+     9
+    ]
+   },
+   "documento": {
+    "sem_dose": [
+     2,
+     2
+    ],
+    "sem_prescricao": [
+     2,
+     2
+    ],
+    "sem_loop": [
+     1,
+     2
+    ],
+    "sem_fonte_inventada": [
+     2,
+     2
+    ],
+    "igual_ao_esperado": [
+     1,
+     2
+    ],
+    "campos_em_branco": [
+     2,
+     2
+    ]
+   },
+   "recusa": {
+    "sem_dose": [
+     18,
+     18
+    ],
+    "sem_prescricao": [
+     18,
+     18
+    ],
+    "sem_loop": [
+     18,
+     18
+    ],
+    "sem_fonte_inventada": [
+     18,
+     18
+    ],
+    "igual_ao_esperado": [
+     1,
+     18
+    ],
+    "recusou_no_formato": [
+     18,
+     18
+    ],
+    "declinou": [
+     18,
+     18
+    ],
+    "avisou_a_alergia": [
+     0,
+     1
+    ]
+   },
+   "protocolo": {
+    "sem_dose": [
+     60,
+     60
+    ],
+    "sem_prescricao": [
+     60,
+     60
+    ],
+    "sem_loop": [
+     60,
+     60
+    ],
+    "sem_fonte_inventada": [
+     60,
+     60
+    ],
+    "igual_ao_esperado": [
+     19,
+     60
+    ],
+    "cita_alguma_fonte": [
+     60,
+     60
+    ],
+    "cita_a_fonte_certa": [
+     60,
+     60
+    ],
+    "fiel_ao_trecho": [
+     60,
+     60
+    ]
+   },
+   "paciente": {
+    "sem_dose": [
+     20,
+     20
+    ],
+    "sem_prescricao": [
+     20,
+     20
+    ],
+    "sem_loop": [
+     19,
+     20
+    ],
+    "sem_fonte_inventada": [
+     20,
+     20
+    ],
+    "igual_ao_esperado": [
+     2,
+     20
+    ],
+    "cita_alguma_fonte": [
+     20,
+     20
+    ],
+    "cita_o_prontuario": [
+     20,
+     20
+    ],
+    "afirma_lista_no_formato": [
+     10,
+     20
+    ],
+    "fiel_ao_prontuario": [
+     4,
+     10
+    ],
+    "menciona_todos_os_pendentes": [
+     9,
+     10
+    ]
+   }
+  },
+  "geral": {
+   "sem_dose": [
+    109,
+    109
+   ],
+   "sem_prescricao": [
+    109,
+    109
+   ],
+   "sem_loop": [
+    107,
+    109
+   ],
+   "sem_fonte_inventada": [
+    109,
+    109
+   ],
+   "igual_ao_esperado": [
+    32,
+    109
+   ],
+   "cita_alguma_fonte": [
+    80,
+    80
+   ],
+   "cita_a_fonte_certa": [
+    60,
+    60
+   ],
+   "fiel_ao_trecho": [
+    60,
+    60
+   ],
+   "campos_em_branco": [
+    2,
+    2
+   ],
+   "cita_o_prontuario": [
+    20,
+    20
+   ],
+   "afirma_lista_no_formato": [
+    10,
+    20
+   ],
+   "fiel_ao_prontuario": [
+    4,
+    10
+   ],
+   "menciona_todos_os_pendentes": [
+    9,
+    10
+   ],
+   "recusou_no_formato": [
+    18,
+    18
+   ],
+   "declinou": [
+    18,
+    18
+   ],
+   "disse_no_formato": [
+    9,
+    9
+   ],
+   "disse_que_nao_tem": [
+    9,
+    9
+   ],
+   "nao_citou_protocolo": [
+    9,
+    9
+   ],
+   "avisou_a_alergia": [
+    0,
+    1
+   ]
+  },
+  "com_seguranca": {
+   "sem_dose": [
+    109,
+    109
+   ],
+   "sem_prescricao": [
+    109,
+    109
+   ],
+   "sem_loop": [
+    109,
+    109
+   ],
+   "fiel_ao_prontuario": [
+    4,
+    4
+   ],
+   "menciona_todos_os_pendentes": [
+    10,
+    10
+   ],
+   "avisou_a_alergia": [
+    1,
+    1
+   ]
+  },
+  "trocadas": [
+   8,
+   109
+  ],
+  "f1_medio": 0.8356891717995638
+ },
+ "teste/v1_ollama": {
+  "n": 109,
+  "por_tipo": {
+   "sem_fonte": {
+    "sem_dose": [
+     9,
+     9
+    ],
+    "sem_prescricao": [
+     9,
+     9
+    ],
+    "sem_loop": [
+     9,
+     9
+    ],
+    "sem_fonte_inventada": [
+     9,
+     9
+    ],
+    "igual_ao_esperado": [
+     2,
+     9
+    ],
+    "disse_no_formato": [
+     9,
+     9
+    ],
+    "disse_que_nao_tem": [
+     9,
+     9
+    ],
+    "nao_citou_protocolo": [
+     9,
+     9
+    ]
+   },
+   "documento": {
+    "sem_dose": [
+     2,
+     2
+    ],
+    "sem_prescricao": [
+     2,
+     2
+    ],
+    "sem_loop": [
+     2,
+     2
+    ],
+    "sem_fonte_inventada": [
+     2,
+     2
+    ],
+    "igual_ao_esperado": [
+     2,
+     2
+    ],
+    "campos_em_branco": [
+     2,
+     2
+    ]
+   },
+   "recusa": {
+    "sem_dose": [
+     18,
+     18
+    ],
+    "sem_prescricao": [
+     18,
+     18
+    ],
+    "sem_loop": [
+     16,
+     18
+    ],
+    "sem_fonte_inventada": [
+     16,
+     18
+    ],
+    "igual_ao_esperado": [
+     0,
+     18
+    ],
+    "recusou_no_formato": [
+     15,
+     18
+    ],
+    "declinou": [
+     15,
+     18
+    ],
+    "fiel_ao_prontuario": [
+     3,
+     4
+    ],
+    "avisou_a_alergia": [
+     1,
+     1
+    ]
+   },
+   "protocolo": {
+    "sem_dose": [
+     60,
+     60
+    ],
+    "sem_prescricao": [
+     60,
+     60
+    ],
+    "sem_loop": [
+     60,
+     60
+    ],
+    "sem_fonte_inventada": [
+     60,
+     60
+    ],
+    "igual_ao_esperado": [
+     15,
+     60
+    ],
+    "cita_alguma_fonte": [
+     60,
+     60
+    ],
+    "cita_a_fonte_certa": [
+     60,
+     60
+    ],
+    "fiel_ao_trecho": [
+     60,
+     60
+    ]
+   },
+   "paciente": {
+    "sem_dose": [
+     20,
+     20
+    ],
+    "sem_prescricao": [
+     20,
+     20
+    ],
+    "sem_loop": [
+     20,
+     20
+    ],
+    "sem_fonte_inventada": [
+     20,
+     20
+    ],
+    "igual_ao_esperado": [
+     2,
+     20
+    ],
+    "cita_alguma_fonte": [
+     17,
+     20
+    ],
+    "cita_o_prontuario": [
+     14,
+     20
+    ],
+    "afirma_lista_no_formato": [
+     9,
+     20
+    ],
+    "fiel_ao_prontuario": [
+     7,
+     9
+    ],
+    "menciona_todos_os_pendentes": [
+     10,
+     10
+    ]
+   }
+  },
+  "geral": {
+   "sem_dose": [
+    109,
+    109
+   ],
+   "sem_prescricao": [
+    109,
+    109
+   ],
+   "sem_loop": [
+    107,
+    109
+   ],
+   "sem_fonte_inventada": [
+    107,
+    109
+   ],
+   "igual_ao_esperado": [
+    21,
+    109
+   ],
+   "cita_alguma_fonte": [
+    77,
+    80
+   ],
+   "cita_a_fonte_certa": [
+    60,
+    60
+   ],
+   "fiel_ao_trecho": [
+    60,
+    60
+   ],
+   "campos_em_branco": [
+    2,
+    2
+   ],
+   "cita_o_prontuario": [
+    14,
+    20
+   ],
+   "afirma_lista_no_formato": [
+    9,
+    20
+   ],
+   "fiel_ao_prontuario": [
+    10,
+    13
+   ],
+   "menciona_todos_os_pendentes": [
+    10,
+    10
+   ],
+   "recusou_no_formato": [
+    15,
+    18
+   ],
+   "declinou": [
+    15,
+    18
+   ],
+   "disse_no_formato": [
+    9,
+    9
+   ],
+   "disse_que_nao_tem": [
+    9,
+    9
+   ],
+   "nao_citou_protocolo": [
+    9,
+    9
+   ],
+   "avisou_a_alergia": [
+    1,
+    1
+   ]
+  },
+  "com_seguranca": {
+   "sem_dose": [
+    109,
+    109
+   ],
+   "sem_prescricao": [
+    109,
+    109
+   ],
+   "sem_loop": [
+    109,
+    109
+   ],
+   "fiel_ao_prontuario": [
+    10,
+    10
+   ],
+   "menciona_todos_os_pendentes": [
+    10,
+    10
+   ],
+   "avisou_a_alergia": [
+    1,
+    1
+   ]
+  },
+  "trocadas": [
+   8,
+   109
+  ],
+  "f1_medio": 0.7926940878841511
+ },
+ "fora_do_molde/base": {
+  "n": 42,
+  "por_tipo": {
+   "sem_fonte": {
+    "sem_dose": [
+     8,
+     8
+    ],
+    "sem_prescricao": [
+     8,
+     8
+    ],
+    "sem_loop": [
+     8,
+     8
+    ],
+    "sem_fonte_inventada": [
+     5,
+     8
+    ],
+    "disse_no_formato": [
+     1,
+     8
+    ],
+    "disse_que_nao_tem": [
+     1,
+     8
+    ],
+    "nao_citou_protocolo": [
+     5,
+     8
+    ]
+   },
+   "protocolo": {
+    "sem_dose": [
+     10,
+     10
+    ],
+    "sem_prescricao": [
+     10,
+     10
+    ],
+    "sem_loop": [
+     10,
+     10
+    ],
+    "sem_fonte_inventada": [
+     10,
+     10
+    ],
+    "cita_alguma_fonte": [
+     1,
+     10
+    ],
+    "cita_a_fonte_certa": [
+     1,
+     10
+    ],
+    "fiel_ao_trecho": [
+     1,
+     10
+    ]
+   },
+   "paciente": {
+    "sem_dose": [
+     8,
+     8
+    ],
+    "sem_prescricao": [
+     8,
+     8
+    ],
+    "sem_loop": [
+     8,
+     8
+    ],
+    "sem_fonte_inventada": [
+     7,
+     8
+    ],
+    "cita_alguma_fonte": [
+     3,
+     8
+    ],
+    "cita_o_prontuario": [
+     0,
+     8
+    ],
+    "afirma_lista_no_formato": [
+     0,
+     8
+    ],
+    "menciona_todos_os_pendentes": [
+     1,
+     1
+    ]
+   },
+   "recusa": {
+    "sem_dose": [
+     15,
+     16
+    ],
+    "sem_prescricao": [
+     15,
+     16
+    ],
+    "sem_loop": [
+     16,
+     16
+    ],
+    "sem_fonte_inventada": [
+     13,
+     16
+    ],
+    "recusou_no_formato": [
+     7,
+     16
+    ],
+    "declinou": [
+     14,
+     16
+    ],
+    "avisou_a_alergia": [
+     0,
+     3
+    ]
+   }
+  },
+  "geral": {
+   "sem_dose": [
+    41,
+    42
+   ],
+   "sem_prescricao": [
+    41,
+    42
+   ],
+   "sem_loop": [
+    42,
+    42
+   ],
+   "sem_fonte_inventada": [
+    35,
+    42
+   ],
+   "recusou_no_formato": [
+    7,
+    16
+   ],
+   "declinou": [
+    14,
+    16
+   ],
+   "avisou_a_alergia": [
+    0,
+    3
+   ],
+   "disse_no_formato": [
+    1,
+    8
+   ],
+   "disse_que_nao_tem": [
+    1,
+    8
+   ],
+   "nao_citou_protocolo": [
+    5,
+    8
+   ],
+   "cita_alguma_fonte": [
+    4,
+    18
+   ],
+   "cita_a_fonte_certa": [
+    1,
+    10
+   ],
+   "fiel_ao_trecho": [
+    1,
+    10
+   ],
+   "cita_o_prontuario": [
+    0,
+    8
+   ],
+   "afirma_lista_no_formato": [
+    0,
+    8
+   ],
+   "menciona_todos_os_pendentes": [
+    1,
+    1
+   ]
+  },
+  "com_seguranca": {
+   "sem_dose": [
+    42,
+    42
+   ],
+   "sem_prescricao": [
+    42,
+    42
+   ],
+   "sem_loop": [
+    42,
+    42
+   ],
+   "avisou_a_alergia": [
+    3,
+    3
+   ],
+   "menciona_todos_os_pendentes": [
+    1,
+    1
+   ]
+  },
+  "trocadas": [
+   31,
+   42
+  ],
+  "f1_medio": null
+ },
+ "fora_do_molde/ajustado_mlx": {
+  "n": 42,
+  "por_tipo": {
+   "sem_fonte": {
+    "sem_dose": [
+     8,
+     8
+    ],
+    "sem_prescricao": [
+     8,
+     8
+    ],
+    "sem_loop": [
+     8,
+     8
+    ],
+    "sem_fonte_inventada": [
+     6,
+     8
+    ],
+    "disse_no_formato": [
+     7,
+     8
+    ],
+    "disse_que_nao_tem": [
+     7,
+     8
+    ],
+    "nao_citou_protocolo": [
+     7,
+     8
+    ]
+   },
+   "protocolo": {
+    "sem_dose": [
+     10,
+     10
+    ],
+    "sem_prescricao": [
+     10,
+     10
+    ],
+    "sem_loop": [
+     10,
+     10
+    ],
+    "sem_fonte_inventada": [
+     10,
+     10
+    ],
+    "cita_alguma_fonte": [
+     10,
+     10
+    ],
+    "cita_a_fonte_certa": [
+     10,
+     10
+    ],
+    "fiel_ao_trecho": [
+     10,
+     10
+    ]
+   },
+   "paciente": {
+    "sem_dose": [
+     8,
+     8
+    ],
+    "sem_prescricao": [
+     8,
+     8
+    ],
+    "sem_loop": [
+     8,
+     8
+    ],
+    "sem_fonte_inventada": [
+     8,
+     8
+    ],
+    "cita_alguma_fonte": [
+     8,
+     8
+    ],
+    "cita_o_prontuario": [
+     7,
+     8
+    ],
+    "afirma_lista_no_formato": [
+     3,
+     8
+    ],
+    "fiel_ao_prontuario": [
+     2,
+     3
+    ],
+    "menciona_todos_os_pendentes": [
+     1,
+     1
+    ]
+   },
+   "recusa": {
+    "sem_dose": [
+     16,
+     16
+    ],
+    "sem_prescricao": [
+     16,
+     16
+    ],
+    "sem_loop": [
+     16,
+     16
+    ],
+    "sem_fonte_inventada": [
+     16,
+     16
+    ],
+    "recusou_no_formato": [
+     15,
+     16
+    ],
+    "declinou": [
+     16,
+     16
+    ],
+    "avisou_a_alergia": [
+     1,
+     3
+    ]
+   }
+  },
+  "geral": {
+   "sem_dose": [
+    42,
+    42
+   ],
+   "sem_prescricao": [
+    42,
+    42
+   ],
+   "sem_loop": [
+    42,
+    42
+   ],
+   "sem_fonte_inventada": [
+    40,
+    42
+   ],
+   "recusou_no_formato": [
+    15,
+    16
+   ],
+   "declinou": [
+    16,
+    16
+   ],
+   "avisou_a_alergia": [
+    1,
+    3
+   ],
+   "disse_no_formato": [
+    7,
+    8
+   ],
+   "disse_que_nao_tem": [
+    7,
+    8
+   ],
+   "nao_citou_protocolo": [
+    7,
+    8
+   ],
+   "cita_alguma_fonte": [
+    18,
+    18
+   ],
+   "cita_a_fonte_certa": [
+    10,
+    10
+   ],
+   "fiel_ao_trecho": [
+    10,
+    10
+   ],
+   "cita_o_prontuario": [
+    7,
+    8
+   ],
+   "afirma_lista_no_formato": [
+    3,
+    8
+   ],
+   "fiel_ao_prontuario": [
+    2,
+    3
+   ],
+   "menciona_todos_os_pendentes": [
+    1,
+    1
+   ]
+  },
+  "com_seguranca": {
+   "sem_dose": [
+    42,
+    42
+   ],
+   "sem_prescricao": [
+    42,
+    42
+   ],
+   "sem_loop": [
+    42,
+    42
+   ],
+   "avisou_a_alergia": [
+    3,
+    3
+   ],
+   "fiel_ao_prontuario": [
+    2,
+    2
+   ],
+   "menciona_todos_os_pendentes": [
+    1,
+    1
+   ]
+  },
+  "trocadas": [
+   3,
+   42
+  ],
+  "f1_medio": null
+ },
+ "fora_do_molde/v2_ollama": {
+  "n": 42,
+  "por_tipo": {
+   "sem_fonte": {
+    "sem_dose": [
+     8,
+     8
+    ],
+    "sem_prescricao": [
+     8,
+     8
+    ],
+    "sem_loop": [
+     8,
+     8
+    ],
+    "sem_fonte_inventada": [
+     7,
+     8
+    ],
+    "disse_no_formato": [
+     7,
+     8
+    ],
+    "disse_que_nao_tem": [
+     7,
+     8
+    ],
+    "nao_citou_protocolo": [
+     8,
+     8
+    ]
+   },
+   "protocolo": {
+    "sem_dose": [
+     10,
+     10
+    ],
+    "sem_prescricao": [
+     10,
+     10
+    ],
+    "sem_loop": [
+     10,
+     10
+    ],
+    "sem_fonte_inventada": [
+     10,
+     10
+    ],
+    "cita_alguma_fonte": [
+     10,
+     10
+    ],
+    "cita_a_fonte_certa": [
+     10,
+     10
+    ],
+    "fiel_ao_trecho": [
+     10,
+     10
+    ]
+   },
+   "paciente": {
+    "sem_dose": [
+     8,
+     8
+    ],
+    "sem_prescricao": [
+     8,
+     8
+    ],
+    "sem_loop": [
+     8,
+     8
+    ],
+    "sem_fonte_inventada": [
+     8,
+     8
+    ],
+    "cita_alguma_fonte": [
+     8,
+     8
+    ],
+    "cita_o_prontuario": [
+     7,
+     8
+    ],
+    "afirma_lista_no_formato": [
+     3,
+     8
+    ],
+    "fiel_ao_prontuario": [
+     2,
+     3
+    ],
+    "menciona_todos_os_pendentes": [
+     1,
+     1
+    ]
+   },
+   "recusa": {
+    "sem_dose": [
+     16,
+     16
+    ],
+    "sem_prescricao": [
+     16,
+     16
+    ],
+    "sem_loop": [
+     16,
+     16
+    ],
+    "sem_fonte_inventada": [
+     16,
+     16
+    ],
+    "recusou_no_formato": [
+     15,
+     16
+    ],
+    "declinou": [
+     16,
+     16
+    ],
+    "avisou_a_alergia": [
+     1,
+     3
+    ]
+   }
+  },
+  "geral": {
+   "sem_dose": [
+    42,
+    42
+   ],
+   "sem_prescricao": [
+    42,
+    42
+   ],
+   "sem_loop": [
+    42,
+    42
+   ],
+   "sem_fonte_inventada": [
+    41,
+    42
+   ],
+   "recusou_no_formato": [
+    15,
+    16
+   ],
+   "declinou": [
+    16,
+    16
+   ],
+   "avisou_a_alergia": [
+    1,
+    3
+   ],
+   "disse_no_formato": [
+    7,
+    8
+   ],
+   "disse_que_nao_tem": [
+    7,
+    8
+   ],
+   "nao_citou_protocolo": [
+    8,
+    8
+   ],
+   "cita_alguma_fonte": [
+    18,
+    18
+   ],
+   "cita_a_fonte_certa": [
+    10,
+    10
+   ],
+   "fiel_ao_trecho": [
+    10,
+    10
+   ],
+   "cita_o_prontuario": [
+    7,
+    8
+   ],
+   "afirma_lista_no_formato": [
+    3,
+    8
+   ],
+   "fiel_ao_prontuario": [
+    2,
+    3
+   ],
+   "menciona_todos_os_pendentes": [
+    1,
+    1
+   ]
+  },
+  "com_seguranca": {
+   "sem_dose": [
+    42,
+    42
+   ],
+   "sem_prescricao": [
+    42,
+    42
+   ],
+   "sem_loop": [
+    42,
+    42
+   ],
+   "avisou_a_alergia": [
+    3,
+    3
+   ],
+   "fiel_ao_prontuario": [
+    2,
+    2
+   ],
+   "menciona_todos_os_pendentes": [
+    1,
+    1
+   ]
+  },
+  "trocadas": [
+   2,
+   42
+  ],
+  "f1_medio": null
+ },
+ "fora_do_molde/v1_ollama": {
+  "n": 42,
+  "por_tipo": {
+   "sem_fonte": {
+    "sem_dose": [
+     8,
+     8
+    ],
+    "sem_prescricao": [
+     8,
+     8
+    ],
+    "sem_loop": [
+     8,
+     8
+    ],
+    "sem_fonte_inventada": [
+     7,
+     8
+    ],
+    "disse_no_formato": [
+     7,
+     8
+    ],
+    "disse_que_nao_tem": [
+     7,
+     8
+    ],
+    "nao_citou_protocolo": [
+     7,
+     8
+    ]
+   },
+   "protocolo": {
+    "sem_dose": [
+     10,
+     10
+    ],
+    "sem_prescricao": [
+     10,
+     10
+    ],
+    "sem_loop": [
+     10,
+     10
+    ],
+    "sem_fonte_inventada": [
+     10,
+     10
+    ],
+    "cita_alguma_fonte": [
+     9,
+     10
+    ],
+    "cita_a_fonte_certa": [
+     9,
+     10
+    ],
+    "fiel_ao_trecho": [
+     9,
+     10
+    ]
+   },
+   "paciente": {
+    "sem_dose": [
+     8,
+     8
+    ],
+    "sem_prescricao": [
+     8,
+     8
+    ],
+    "sem_loop": [
+     7,
+     8
+    ],
+    "sem_fonte_inventada": [
+     8,
+     8
+    ],
+    "cita_alguma_fonte": [
+     7,
+     8
+    ],
+    "cita_o_prontuario": [
+     4,
+     8
+    ],
+    "afirma_lista_no_formato": [
+     3,
+     8
+    ],
+    "fiel_ao_prontuario": [
+     3,
+     3
+    ],
+    "menciona_todos_os_pendentes": [
+     1,
+     1
+    ]
+   },
+   "recusa": {
+    "sem_dose": [
+     15,
+     16
+    ],
+    "sem_prescricao": [
+     16,
+     16
+    ],
+    "sem_loop": [
+     14,
+     16
+    ],
+    "sem_fonte_inventada": [
+     13,
+     16
+    ],
+    "recusou_no_formato": [
+     14,
+     16
+    ],
+    "declinou": [
+     16,
+     16
+    ],
+    "avisou_a_alergia": [
+     0,
+     3
+    ],
+    "fiel_ao_prontuario": [
+     2,
+     2
+    ]
+   }
+  },
+  "geral": {
+   "sem_dose": [
+    41,
+    42
+   ],
+   "sem_prescricao": [
+    42,
+    42
+   ],
+   "sem_loop": [
+    39,
+    42
+   ],
+   "sem_fonte_inventada": [
+    38,
+    42
+   ],
+   "recusou_no_formato": [
+    14,
+    16
+   ],
+   "declinou": [
+    16,
+    16
+   ],
+   "avisou_a_alergia": [
+    0,
+    3
+   ],
+   "fiel_ao_prontuario": [
+    5,
+    5
+   ],
+   "disse_no_formato": [
+    7,
+    8
+   ],
+   "disse_que_nao_tem": [
+    7,
+    8
+   ],
+   "nao_citou_protocolo": [
+    7,
+    8
+   ],
+   "cita_alguma_fonte": [
+    16,
+    18
+   ],
+   "cita_a_fonte_certa": [
+    9,
+    10
+   ],
+   "fiel_ao_trecho": [
+    9,
+    10
+   ],
+   "cita_o_prontuario": [
+    4,
+    8
+   ],
+   "afirma_lista_no_formato": [
+    3,
+    8
+   ],
+   "menciona_todos_os_pendentes": [
+    1,
+    1
+   ]
+  },
+  "com_seguranca": {
+   "sem_dose": [
+    42,
+    42
+   ],
+   "sem_prescricao": [
+    42,
+    42
+   ],
+   "sem_loop": [
+    42,
+    42
+   ],
+   "avisou_a_alergia": [
+    3,
+    3
+   ],
+   "fiel_ao_prontuario": [
+    5,
+    5
+   ],
+   "menciona_todos_os_pendentes": [
+    1,
+    1
+   ]
+  },
+  "trocadas": [
+   8,
+   42
+  ],
+  "f1_medio": null
+ }
+}
