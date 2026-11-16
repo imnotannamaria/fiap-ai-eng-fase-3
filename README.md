@@ -2,7 +2,9 @@
 
 Projeto do Tech Challenge Fase 3 da FIAP PósTech IADT. A ideia é um assistente virtual pra médicos de um hospital: responde dúvidas com base nos protocolos internos, consulta o prontuário do paciente e nunca prescreve nada sozinho.
 
-Em andamento. Por enquanto o repositório tem os dados, o fine-tuning, o assistente com LangChain, a parte de segurança e auditoria, o fluxo automatizado com LangGraph e a avaliação.
+O repositório tem os dados sintéticos, o fine-tuning com LoRA, o assistente com LangChain, a camada de segurança e auditoria, o fluxo automatizado com LangGraph e a avaliação comparando o modelo base com o ajustado. Tudo roda local, no Mac.
+
+Pra ler com calma: o [relatório técnico](relatorio_tecnico.md) junta o processo, os diagramas e os resultados, e a pasta [docs/](docs/) tem a arquitetura e a análise de segurança. Este README tem o detalhe de cada parte e os comandos pra rodar.
 
 ---
 
@@ -296,13 +298,31 @@ uv venv --python 3.12 .venv
 uv pip install --python .venv/bin/python -e ".[dev]"
 ```
 
+A ordem completa, do zero até o assistente rodando:
+
+1. Instalar as dependências (comandos acima) e o [Ollama](https://ollama.com).
+2. Gerar a base de prontuários e o dataset.
+3. Treinar, fundir o adapter e criar o modelo no Ollama (seção de fine-tuning, leva de 45 min a 1 h).
+4. Fazer perguntas ao assistente, rodar o fluxo e conferir o log.
+5. Rodar a avaliação (opcional, leva uns 40 minutos) e os testes.
+
+Os testes e a geração do dataset não precisam do Ollama nem do modelo treinado. O modelo e os logs não vão pro Git (`models/` e `logs/` estão no `.gitignore`), então quem clona o repositório precisa fazer o passo 3.
+
 Gerar a base de prontuários e o dataset:
 
 ```bash
 .venv/bin/python -m hospital_assistant.data.build_dataset
 ```
 
-Fazer uma pergunta ao assistente (com o Ollama rodando e o modelo criado, como na seção de fine-tuning):
+Treinar e importar o modelo (detalhes na seção de fine-tuning):
+
+```bash
+.venv/bin/python -m hospital_assistant.finetune.train
+.venv/bin/python -m hospital_assistant.finetune.train --fuse
+ollama create hospital-assistant -f Modelfile
+```
+
+Fazer uma pergunta ao assistente (com o Ollama rodando e o modelo criado):
 
 ```bash
 .venv/bin/python -c "
@@ -324,11 +344,20 @@ from hospital_assistant.safety.auditoria import Auditoria
 print(Auditoria().verificar())"
 ```
 
-Rodar os testes:
+Rodar o fluxo automatizado e ver o diagrama do grafo:
+
+```bash
+.venv/bin/python -m hospital_assistant.graph P-0038
+.venv/bin/python -m hospital_assistant.graph --mermaid
+```
+
+Rodar os testes (220, não precisam do Ollama):
 
 ```bash
 .venv/bin/python -m pytest
 ```
+
+A avaliação tem os comandos na seção própria.
 
 ---
 
@@ -348,6 +377,8 @@ Rodar os testes:
 │   ├── graph/                     fluxo do paciente em LangGraph, regras de alerta, fila de alertas
 │   └── evaluation/                conjuntos, métricas, geradores e relatório da avaliação
 ├── evaluation/                    respostas de cada sistema (resultados/), tabelas e erros
+├── docs/                          arquitetura e segurança
+├── relatorio_tecnico.md           processo, diagramas, avaliação e limitações
 ├── Modelfile                      importa o modelo ajustado no Ollama
 ├── tests/
 └── pyproject.toml
