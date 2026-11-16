@@ -3,6 +3,7 @@
 Uso:
     python -m hospital_assistant.finetune.train            # treina e avalia no teste
     python -m hospital_assistant.finetune.train --fuse     # junta adapter ao modelo base
+    python -m hospital_assistant.finetune.train --fuse --adapter-path adapters/v2   # usa o adapter versionado, sem treinar
     python -m hospital_assistant.finetune.train --resume   # retoma se o treino caiu
 """
 
@@ -10,10 +11,11 @@ import argparse
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 from hospital_assistant.config import ADAPTER_DIR, BASE_MODEL, FUSED_DIR, LOGS, PROCESSED
 
-# Os motivos de cada escolha estão no README, na seção de fine-tuning.
+# Os motivos de cada escolha estão em docs/fine_tuning.md.
 HIPERPARAMETROS = {
     "--num-layers": "16",          # LoRA nas 16 últimas camadas: bom custo/benefício em 16 GB
     "--batch-size": "4",
@@ -44,7 +46,7 @@ def treinar(retomar: bool = False) -> None:
     for k, v in hiper.items():
         cmd += [k, v]
     print(" ".join(cmd))
-    with open(LOGS / "finetune.log", "w") as log:
+    with open(LOGS / "finetune.log", "a" if retomar else "w") as log:  # retomar não apaga o log da primeira parte
         env = {**os.environ, "PYTHONUNBUFFERED": "1"}  # sem isso o log só aparece quando o treino acaba
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, env=env)
         for linha in proc.stdout:
@@ -55,10 +57,10 @@ def treinar(retomar: bool = False) -> None:
             raise SystemExit(proc.returncode)
 
 
-def juntar() -> None:
+def juntar(adapter: Path = ADAPTER_DIR) -> None:
     cmd = [
         sys.executable, "-m", "mlx_lm", "fuse", "--model", BASE_MODEL,
-        "--adapter-path", str(ADAPTER_DIR), "--save-path", str(FUSED_DIR), "--dequantize",
+        "--adapter-path", str(adapter), "--save-path", str(FUSED_DIR), "--dequantize",
     ]
     subprocess.run(cmd, check=True)
 
@@ -67,5 +69,6 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--fuse", action="store_true")
     ap.add_argument("--resume", action="store_true", help="retoma do checkpoint da iteração 200 (adapter.safetensors)")
+    ap.add_argument("--adapter-path", type=Path, default=ADAPTER_DIR, help="adapter usado no --fuse (padrão: o do último treino)")
     args = ap.parse_args()
-    juntar() if args.fuse else treinar(args.resume)
+    juntar(args.adapter_path) if args.fuse else treinar(args.resume)

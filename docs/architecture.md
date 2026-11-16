@@ -1,6 +1,6 @@
 # Arquitetura
 
-O sistema é um **apoio ao médico**, não um sistema que decide sozinho. Toda saída fica marcada como "aguardando validação médica", e a decisão final é sempre de uma pessoa.
+O sistema é um apoio ao médico, não um sistema que decide sozinho. Toda saída fica marcada como "aguardando validação médica", e a decisão final é sempre de uma pessoa.
 
 ```mermaid
 flowchart LR
@@ -32,15 +32,15 @@ flowchart LR
 
 ## Decisões de arquitetura
 
-**O modelo escreve, o código decide.** O código acha o paciente, busca o protocolo, calcula as listas de exames e alergias, decide os alertas e valida a saída. O modelo só escreve texto com o que recebeu. A razão está medida: ele erra alguma lista do prontuário em cerca de 39% das respostas.
+O modelo escreve, o código decide. O código acha o paciente, busca o protocolo, calcula as listas de exames e alergias, decide os alertas e valida a saída. O modelo só escreve texto com o que recebeu. A razão está medida: ele erra alguma lista do prontuário em cerca de 39% das respostas.
 
-**Conhecimento no prompt, comportamento nos pesos.** Mudar um protocolo é mudar um texto. O fine-tuning ensina a citar a fonte, recusar prescrição e dizer "não encontrei". O formato do prompt é o mesmo código no treino e no uso, e um teste confere isso nos 240 exemplos com paciente.
+Conhecimento no prompt, comportamento nos pesos. Mudar um protocolo é mudar um texto. O fine-tuning ensina a citar a fonte, recusar prescrição e dizer "não encontrei". O formato do prompt é o mesmo código no treino e no uso, e um teste confere isso nos 240 exemplos com paciente.
 
-**BM25 em vez de embeddings.** Com 10 protocolos, um banco vetorial não se paga. O BM25 dá a nota, o protocolo e o campo de cada trecho, e isso alimenta a explicabilidade.
+BM25 em vez de embeddings. Com 10 protocolos, um banco vetorial não se paga. O BM25 dá a nota, o protocolo e o campo de cada trecho, e isso alimenta a explicabilidade.
 
-**Fluxo fixo em vez de agente.** A chain não deixa o modelo escolher quando consultar o prontuário. Um modelo de 1,5B decidindo isso seria um ponto frágil na parte de segurança. As ferramentas existem e viram nós do LangGraph.
+Fluxo fixo em vez de agente. A chain não deixa o modelo escolher quando consultar o prontuário. Um modelo de 1,5B decidindo isso seria um ponto frágil na parte de segurança. A chain usa a ferramenta `consultar_paciente` (um `@tool` do LangChain) pra montar o contexto do prompt. `listar_exames_pendentes` e `buscar_protocolo` existem e têm teste, mas nenhum agente as chama neste projeto. O fluxo do LangGraph chama direto as funções de `prontuario.py`.
 
-**Revisão humana é um estado do grafo.** O fluxo pausa em `revisao_humana` (`interrupt`) e só segue com a decisão de um médico identificado. Sem decisão, o plano nunca vira final.
+Revisão humana é um estado do grafo. O fluxo pausa em `revisao_humana` (`interrupt`) e só segue com a decisão de um médico identificado. Sem decisão, o plano nunca vira final.
 
 ## Fluxo de uma pergunta
 

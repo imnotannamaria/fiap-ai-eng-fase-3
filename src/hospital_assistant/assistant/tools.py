@@ -1,9 +1,10 @@
 """Ferramentas LangChain sobre o prontuário e os protocolos.
 
-Elas devolvem sempre a visão desidentificada (P-0007, idade e sexo). A chain chama
-essas ferramentas num fluxo fixo, o modelo não escolhe quando usar: um modelo de 1,5B
-decidindo sozinho se consulta o prontuário seria um ponto frágil numa regra de segurança.
-No fluxo do LangGraph (Fase 5) elas viram nós.
+Elas devolvem sempre a visão desidentificada (P-0007, idade e sexo). A chain usa
+`consultar_paciente` pra montar o contexto do prompt, num fluxo fixo: o modelo não escolhe
+quando usar, porque um modelo de 1,5B decidindo sozinho se consulta o prontuário seria um
+ponto frágil numa regra de segurança. As outras duas estão prontas pra um agente, mas nenhum
+agente as chama neste projeto. O fluxo do LangGraph chama direto as funções de prontuario.py.
 """
 
 from langchain_core.tools import tool

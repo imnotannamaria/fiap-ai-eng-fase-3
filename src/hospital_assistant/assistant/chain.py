@@ -17,6 +17,7 @@ from langchain_ollama import ChatOllama
 from hospital_assistant.assistant import prontuario
 from hospital_assistant.assistant.prompting import mensagens
 from hospital_assistant.assistant.retriever import ProtocoloRetriever
+from hospital_assistant.assistant.tools import consultar_paciente
 from hospital_assistant.config import OLLAMA_MODEL, OLLAMA_URL
 
 ID_PACIENTE = re.compile(r"\bP-\d{4}\b", re.I)
@@ -59,7 +60,7 @@ class Assistente:
         fontes = [{"tipo": "protocolo", "id": d.metadata["fonte"], "campo": d.metadata["campo"], "nota": d.metadata["nota"]} for d in docs]
         if paciente:
             fontes.append({"tipo": "prontuario", "id": paciente["id"]})
-        paciente_txt = prontuario.formatar_paciente(paciente) if paciente else None
+        paciente_txt = consultar_paciente.invoke({"paciente_id": pid}) if paciente else None
         return {
             "pergunta": pergunta,
             "paciente_id": pid,
