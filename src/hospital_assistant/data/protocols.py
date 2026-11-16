@@ -168,3 +168,19 @@ PERGUNTAS = {
         "O que não posso esquecer de checar em {t}?",
     ],
 }
+
+
+# Palavras que o médico usa no dia a dia e que não aparecem no título do protocolo.
+# Só o retriever usa isso. Não entra no dataset nem no prompt.
+SINONIMOS = {
+    "PROT-001": "sepse septico septicemia infeccao generalizada",
+    "PROT-002": "infarto iam sca angina coracao peito coronariana",
+    "PROT-003": "avc derrame isquemico neurologico",
+    "PROT-004": "pneumonia pulmao",
+    "PROT-005": "cad cetoacidose diabetes diabetica",
+    "PROT-006": "hipertensiva pressao hipertensao",
+    "PROT-007": "anafilaxia anafilatica anafilatico urticaria angioedema",
+    "PROT-008": "tep embolia trombo coagulo",
+    "PROT-009": "ic icc insuficiencia cardiaca descompensada edema",
+    "PROT-010": "itu urinaria urinario cistite pielonefrite",
+}

@@ -2,7 +2,7 @@
 
 Projeto do Tech Challenge Fase 3 da FIAP PósTech IADT. A ideia é um assistente virtual pra médicos de um hospital: responde dúvidas com base nos protocolos internos, consulta o prontuário do paciente e nunca prescreve nada sozinho.
 
-Em andamento. Por enquanto o repositório tem os dados e o fine-tuning. LangChain, LangGraph, segurança e avaliação entram nos próximos commits.
+Em andamento. Por enquanto o repositório tem os dados, o fine-tuning e o assistente com LangChain. LangGraph, segurança e avaliação entram nos próximos commits.
 
 ---
 
@@ -87,6 +87,39 @@ O `--fuse` junta o adapter ao modelo base e o `Modelfile` aponta pra esse result
 
 ---
 
+## O assistente (LangChain)
+
+A chain fica em `assistant/chain.py`. O fluxo é fixo:
+
+```
+pergunta -> acha o paciente (ID na pergunta) -> busca o protocolo -> monta o prompt -> LLM ajustada -> resposta + fontes
+```
+
+**Quem decide o quê.** O código busca o protocolo e o prontuário. O modelo só escreve a resposta com o que recebeu. Não deixei o modelo escolher quando consultar o prontuário (o que seria um agente com ferramentas) porque um modelo de 1,5B decidindo isso sozinho seria um ponto frágil justamente na parte de segurança. As ferramentas existem em `assistant/tools.py` e vão virar nós do LangGraph.
+
+**O prompt tem que ser igual ao do treino.** A chain monta o prompt com o mesmo código que gerou o dataset (`assistant/prompting.py`). Tem um teste que refaz o prompt dos 240 exemplos com paciente e compara com o do treino, e os 240 batem exatamente.
+
+**Retriever.** BM25, em `assistant/retriever.py`, em dois passos:
+
+1. *Qual protocolo?* BM25 sobre título, sinônimos ("AVC", "IC", "ITU"), definição e critérios. O protocolo só vale se a pergunta citar algo que identifica ele (título ou sinônimo). A nota sozinha não separava "AVC" (1,7, dentro do escopo) de "como trato uma queimadura?" (3,1, fora do escopo, porque "trato" casa com "trato urinário"). Se tem paciente no contexto, o protocolo da queixa dele ganha um bônus, então "quais sinais de alerta?" usa o protocolo dele sem precisar dizer a doença.
+2. *Qual trecho?* Regras de palavras-chave na pergunta escolhem o campo (conduta, exames, alertas, critérios, definição ou atenção). Sem pista, vai de conduta inicial.
+
+Escolhi BM25 em vez de embeddings porque são 10 protocolos, não precisa de banco vetorial e dá pra mostrar por que cada trecho veio: a nota, o protocolo e o campo ficam nos metadados de cada documento.
+
+**Quanto ele acerta.** Os números pedem cuidado:
+
+- Nas 178 perguntas do dataset ele acerta protocolo e campo em todas, mas eu ajustei as regras olhando essas mesmas perguntas. Não conta como medida.
+- Em 13 perguntas que escrevi à mão, fora dos moldes, ele acertou 12. A que errou foi "quando eu *chamo* o médico", porque a regra só pegava "chamar". Corrigi e virou teste.
+- As 26 perguntas escritas à mão ficam em `tests/test_retriever.py`.
+
+A escolha do campo é uma lista de palavras-chave. Funciona nos casos que testei e vai errar com uma pergunta escrita de um jeito que eu não previ. Quando erra, o modelo responde com o trecho errado, mas ainda cita a fonte dele.
+
+**O que a chain devolve.** Uma `Resposta` com o texto, as fontes que foram entregues ao modelo, as fontes que o modelo disse ter usado e as mensagens enviadas. Isso é a base da explicabilidade e do log de auditoria que entram na próxima etapa. A nota vem como número comum, então vira JSON sem conversão.
+
+**O que ainda não está aqui.** O aviso de alergia. Quando o paciente é alérgico a penicilina e o médico pergunta de amoxicilina, o modelo recusa a prescrição mas não avisa da alergia. Isso fica numa regra no código, na parte de segurança.
+
+---
+
 ## Como rodar
 
 Precisa de um Mac com Apple Silicon e do [uv](https://docs.astral.sh/uv/). O Python é o 3.12 porque as bibliotecas de ML ainda não têm versão pro 3.14.
@@ -100,6 +133,15 @@ Gerar a base de prontuários e o dataset:
 
 ```bash
 .venv/bin/python -m hospital_assistant.data.build_dataset
+```
+
+Fazer uma pergunta ao assistente (com o Ollama rodando e o modelo criado, como na seção de fine-tuning):
+
+```bash
+.venv/bin/python -c "
+from hospital_assistant.assistant.chain import Assistente
+r = Assistente().perguntar('Quais exames estão pendentes do paciente P-0007?')
+print(r.texto); print(r.fontes)"
 ```
 
 Rodar os testes:
@@ -121,7 +163,7 @@ Rodar os testes:
 │   ├── config.py
 │   ├── data/                      protocolos, base sintética, anonimização, dataset
 │   ├── finetune/                  treino LoRA e fuse com MLX-LM
-│   └── assistant/                 acesso ao prontuário e formato do prompt
+│   └── assistant/                 retriever, ferramentas, chain, prontuário e formato do prompt
 ├── Modelfile                      importa o modelo ajustado no Ollama
 ├── tests/
 └── pyproject.toml
