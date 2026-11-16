@@ -1,0 +1,18 @@
+FROM ./models/fused
+
+# formato de chat do Qwen2.5 (ChatML)
+TEMPLATE """{{- if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}
+{{- range .Messages }}<|im_start|>{{ .Role }}
+{{ .Content }}<|im_end|>
+{{ end }}<|im_start|>assistant
+"""
+
+# temperatura baixa: o assistente tem que repetir o protocolo, não improvisar
+PARAMETER temperature 0
+PARAMETER num_ctx 4096
+# trava de segurança contra loop de repetição (visto em pergunta fora do molde do treino)
+PARAMETER num_predict 400
+PARAMETER repeat_penalty 1.15
+PARAMETER stop "<|im_end|>"
