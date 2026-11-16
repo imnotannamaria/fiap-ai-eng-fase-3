@@ -25,6 +25,10 @@ PRESCRICAO = re.compile(
     r"\b(prescrevo|prescrevi|receito|autorizo|libero|indico|vou prescrever|vou receitar|pode tomar|tome|administre|inicie)\b"
     r"|\brecomendo (iniciar|administrar|tomar|usar)\b"
 )
+# o que o modelo afirma sobre o prontuário tem que bater com o prontuário
+LISTA_PENDENTES = re.compile(r"Exames pendentes do paciente (P-\d{4}): (.*?) \[PRONTUARIO")
+LISTA_RESULTADOS = re.compile(r"Resultados já disponíveis do paciente (P-\d{4}): (.*?)\. Ainda pendentes: (.*?) \[PRONTUARIO")
+LISTA_ALERGIAS = re.compile(r"alergia registrada a ([^:.]*?)[:.]")
 FECHO_PADRAO = "A decisão clínica e a prescrição são do médico responsável."
 LIMITE_CARACTERES = 1800
 
@@ -42,7 +46,35 @@ def fontes_entregues(fontes: list[dict]) -> set[str]:
     return {f["id"] if f["tipo"] == "protocolo" else f"PRONTUARIO {f['id']}" for f in fontes}
 
 
-def validar_saida(texto: str, fontes: list[dict]) -> Validacao:
+def _conjunto(lista: str) -> set[str]:
+    lista = lista.strip()
+    return set() if normalizar(lista) in ("nenhum", "nenhum ainda", "nenhum exame pendente") else {normalizar(x).strip() for x in lista.split(",") if x.strip()}
+
+
+def checar_fidelidade(texto: str, paciente: dict | None) -> list[str]:
+    """Compara com o prontuário as listas que o modelo afirmou. Divergiu, é erro do modelo."""
+    if not paciente:
+        return []
+    pendentes = {normalizar(e["exame"]) for e in paciente["exames"] if e["status"] == "pendente"}
+    resultados = {normalizar(f"{e['exame']} ({e['resultado']})") for e in paciente["exames"] if e["resultado"]}
+    alergias = {normalizar(a) for a in paciente["alergias"] if a != "nenhuma conhecida"}
+    motivos = []
+    m = LISTA_PENDENTES.search(texto)
+    if m and (m.group(1) != paciente["id"] or _conjunto(m.group(2)) != pendentes):
+        motivos.append("exames_pendentes_divergem")
+    elif not m and "nenhum exame pendente" in texto and pendentes:
+        motivos.append("exames_pendentes_divergem")
+    m = LISTA_RESULTADOS.search(texto)
+    if m and (_conjunto(m.group(2)) != resultados or _conjunto(m.group(3)) != pendentes):
+        motivos.append("resultados_divergem")
+    for m in LISTA_ALERGIAS.finditer(texto):
+        if _conjunto(m.group(1)) != alergias:
+            motivos.append("alergias_divergem")
+            break
+    return motivos
+
+
+def validar_saida(texto: str, fontes: list[dict], paciente: dict | None = None) -> Validacao:
     motivos = []
     if not texto.strip():
         return Validacao(False, ["vazia"])
@@ -62,14 +94,27 @@ def validar_saida(texto: str, fontes: list[dict]) -> Validacao:
         motivos.append("repeticao")
     if len(texto) > LIMITE_CARACTERES:
         motivos.append("muito_longa")
+    motivos += checar_fidelidade(texto, paciente)
     return Validacao(not motivos, motivos)
 
 
-def resposta_segura(trechos: list[str]) -> str:
-    """Resposta quando a do modelo reprova: o que os protocolos dizem, sem alteração."""
+def _dados_do_prontuario(paciente: dict) -> str:
+    """Resumo do prontuário feito por código, não pelo modelo."""
+    pend = [e["exame"] for e in paciente["exames"] if e["status"] == "pendente"]
+    alerg = [a for a in paciente["alergias"] if a != "nenhuma conhecida"]
+    return (
+        f"Do prontuário do paciente {paciente['id']}: exames pendentes: {', '.join(pend) or 'nenhum'}; "
+        f"alergias registradas: {', '.join(alerg) or 'nenhuma'} [PRONTUARIO {paciente['id']}]."
+    )
+
+
+def resposta_segura(trechos: list[str], paciente: dict | None = None) -> str:
+    """Resposta quando a do modelo reprova: o que os protocolos dizem, sem alteração,
+    e os dados do prontuário calculados por código."""
+    dados = f"{_dados_do_prontuario(paciente)} " if paciente else ""
     if not trechos:
         return (
-            "Não consegui gerar uma resposta confiável e não encontrei trecho de protocolo para esta pergunta, "
+            f"{dados}Não consegui gerar uma resposta confiável e não encontrei trecho de protocolo para esta pergunta, "
             "então não vou arriscar. Consulte o médico responsável."
         )
     corpo = []
@@ -78,7 +123,7 @@ def resposta_segura(trechos: list[str]) -> str:
         codigo = cabecalho.lstrip("(").split(" | ")[0]
         corpo.append(f"{texto} [{codigo}]")
     return (
-        "Não consegui gerar uma resposta confiável, então não vou arriscar. O que os protocolos internos dizem, sem alteração: "
+        f"{dados}Não consegui gerar uma resposta confiável, então não vou arriscar. O que os protocolos internos dizem, sem alteração: "
         + " ".join(corpo)
         + f"\n\n{FECHO_PADRAO}"
     )

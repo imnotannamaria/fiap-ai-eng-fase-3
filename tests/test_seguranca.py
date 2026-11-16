@@ -288,3 +288,87 @@ def test_log_anonimiza_identificador_digitado_na_pergunta(base_prontuarios, tmp_
     texto = (tmp_path / "auditoria.jsonl").read_text(encoding="utf-8")
     assert "123.456.789-09" not in texto and "ana@exemplo.com" not in texto
     assert "[CPF]" in texto and "[EMAIL]" in texto
+
+
+# ---- fidelidade: o que o modelo afirma tem que bater com o prontuário ----
+
+PACIENTE_FIEL = {
+    "id": "P-0003", "alergias": ["látex", "sulfa"],
+    "exames": [
+        {"exame": "ECG", "status": "pendente", "resultado": None},
+        {"exame": "glicemia capilar", "status": "pendente", "resultado": None},
+        {"exame": "tomografia de crânio", "status": "pendente", "resultado": None},
+        {"exame": "troponina", "status": "resultado", "resultado": "alterado"},
+    ],
+}
+FONTES_FIEIS = [{"tipo": "protocolo", "id": "PROT-003", "campo": "conduta", "nota": 3.0}, {"tipo": "prontuario", "id": "P-0003"}]
+
+
+def _resposta_pendentes(lista):
+    return f"Exames pendentes do paciente P-0003: {lista} [PRONTUARIO P-0003]. O protocolo orienta o código AVC [PROT-003]"
+
+
+def test_lista_de_pendentes_correta_passa_em_qualquer_ordem():
+    assert validar_saida(_resposta_pendentes("tomografia de crânio, ECG, glicemia capilar"), FONTES_FIEIS, PACIENTE_FIEL).ok
+
+
+@pytest.mark.parametrize("lista", ["ECG, glicemia capilar", "ECG, glicemia capilar, tomografia de crânio, hemograma", "nenhum exame pendente"])
+def test_lista_de_pendentes_errada_e_reprovada(lista):
+    v = validar_saida(_resposta_pendentes(lista), FONTES_FIEIS, PACIENTE_FIEL)
+    assert not v.ok and "exames_pendentes_divergem" in v.motivos
+
+
+def test_paciente_trocado_na_resposta_e_reprovado():
+    texto = "Exames pendentes do paciente P-0099: ECG, glicemia capilar, tomografia de crânio [PRONTUARIO P-0003]. [PROT-003]"
+    assert "exames_pendentes_divergem" in validar_saida(texto, FONTES_FIEIS, PACIENTE_FIEL).motivos
+
+
+def test_alergia_afirmada_diferente_do_prontuario_e_reprovada():
+    errada = "O paciente tem alergia registrada a penicilina: conferir antes de qualquer medicação. [PROT-003]"
+    certa = "O paciente tem alergia registrada a sulfa, látex: conferir antes de qualquer medicação. [PROT-003]"
+    assert "alergias_divergem" in validar_saida(errada, FONTES_FIEIS, PACIENTE_FIEL).motivos
+    assert validar_saida(certa, FONTES_FIEIS, PACIENTE_FIEL).ok
+
+
+def test_resultados_afirmados_tem_que_bater():
+    certo = "Resultados já disponíveis do paciente P-0003: troponina (alterado). Ainda pendentes: ECG, glicemia capilar, tomografia de crânio [PRONTUARIO P-0003]. [PROT-003]"
+    errado = certo.replace("troponina (alterado)", "troponina (sem alterações)")
+    assert validar_saida(certo, FONTES_FIEIS, PACIENTE_FIEL).ok
+    assert "resultados_divergem" in validar_saida(errado, FONTES_FIEIS, PACIENTE_FIEL).motivos
+
+
+def test_sem_paciente_nao_ha_o_que_comparar():
+    assert validar_saida(_resposta_pendentes("ECG"), FONTES_FIEIS, None).ok
+
+
+def test_resposta_segura_traz_os_dados_do_prontuario_calculados_por_codigo():
+    texto = resposta_segura(["(PROT-003 | AVC | conduta inicial) Ativar o código AVC."], PACIENTE_FIEL)
+    assert "exames pendentes: ECG, glicemia capilar, tomografia de crânio" in texto
+    assert "alergias registradas: látex, sulfa" in texto and "[PRONTUARIO P-0003]" in texto
+
+
+def test_modelo_que_erra_a_lista_de_exames_e_trocado_pela_resposta_segura(base_prontuarios, tmp_path):
+    pid = next(i for i in prontuario.listar_ids() if len(prontuario.exames_pendentes(prontuario.consultar_paciente(i))) >= 2)
+    real = prontuario.exames_pendentes(prontuario.consultar_paciente(pid))
+    errada = f"Exames pendentes do paciente {pid}: {real[0]} [PRONTUARIO {pid}]. Para a queixa registrada, o protocolo orienta seguir a conduta [PROT-001]"
+    r = assistente_seguro(tmp_path, errada).perguntar("Quais exames estão pendentes?", pid)
+    assert r.acao == "resposta_segura" and "exames_pendentes_divergem" in r.validacao.motivos
+    assert all(e in r.texto for e in real)  # a lista verdadeira, por código, está no texto final
+
+
+def test_respostas_esperadas_do_dataset_batem_com_o_prontuario(base_prontuarios):
+    """Se o dataset ensina uma lista que não bate com o prontuário, o dataset está errado."""
+    total = 0
+    for nome in ("train", "valid", "test"):
+        with open(PROCESSED / f"{nome}.jsonl", encoding="utf-8") as f, open(PROCESSED / f"{nome}_meta.jsonl", encoding="utf-8") as g:
+            for linha, meta in zip(f, g):
+                meta = json.loads(meta)
+                if not meta["pid"] or meta["tipo"] == "sem_fonte":
+                    continue
+                msgs = json.loads(linha)["messages"]
+                fontes = [{"tipo": "protocolo", "id": c} for c in re.findall(r"^\((PROT-\d+) \|", msgs[1]["content"], re.M)]
+                fontes.append({"tipo": "prontuario", "id": meta["pid"]})
+                v = validar_saida(msgs[2]["content"], fontes, prontuario.consultar_paciente(meta["pid"]))
+                assert v.ok, (meta["pid"], v.motivos, msgs[2]["content"])
+                total += 1
+    assert total == 240

@@ -25,6 +25,28 @@ STATUS_REVISAO = "aguardando validação médica"
 
 
 @dataclass
+class Veredito:
+    """Resultado de passar um texto do modelo pelas regras de segurança."""
+
+    texto: str  # alertas de alergia + corpo + fecho
+    corpo: str  # só o corpo: a resposta do modelo ou a resposta segura
+    alertas: list[AlertaAlergia]
+    validacao: Validacao
+    acao: str  # "resposta_do_modelo" ou "resposta_segura"
+
+
+def aplicar_seguranca(pergunta: str, texto_do_modelo: str, trechos: list[str], fontes: list[dict], paciente: dict | None) -> Veredito:
+    """Regra de alergia, validação da saída e troca por resposta segura. Usado pelo
+    AssistenteSeguro e pelo fluxo do LangGraph, pra os dois seguirem a mesma regra."""
+    alertas = checar_alergia(paciente, pergunta, texto_do_modelo)
+    validacao = validar_saida(texto_do_modelo, fontes, paciente)
+    corpo = texto_do_modelo if validacao.ok else resposta_segura(trechos, paciente)
+    acao = "resposta_do_modelo" if validacao.ok else "resposta_segura"
+    texto = "\n\n".join([*(a.texto for a in alertas), garantir_fecho(corpo)])
+    return Veredito(texto, corpo, alertas, validacao, acao)
+
+
+@dataclass
 class RespostaSegura:
     id: str
     texto: str
@@ -50,12 +72,8 @@ class AssistenteSeguro:
         r = self.assistente.perguntar(pergunta, paciente_id)
 
         paciente = prontuario.consultar_paciente(r.paciente_id) if r.paciente_id else None
-        alertas = checar_alergia(paciente, pergunta, r.texto)
-
-        validacao = validar_saida(r.texto, r.fontes)
-        corpo = r.texto if validacao.ok else resposta_segura(r.trechos)
-        acao = "resposta_do_modelo" if validacao.ok else "resposta_segura"
-        final = "\n\n".join([*(a.texto for a in alertas), garantir_fecho(corpo)])
+        v = aplicar_seguranca(pergunta, r.texto, r.trechos, r.fontes, paciente)
+        alertas, validacao, acao, final = v.alertas, v.validacao, v.acao, v.texto
 
         resposta = RespostaSegura(
             id=str(uuid.uuid4()), texto=final, paciente_id=r.paciente_id, fontes=r.fontes, alertas=alertas,
