@@ -29,6 +29,7 @@ class Resposta:
     texto: str
     paciente_id: str | None
     fontes: list[dict] = field(default_factory=list)  # o que foi entregue ao modelo
+    trechos: list[str] = field(default_factory=list)  # texto dos trechos entregues
     citadas: list[str] = field(default_factory=list)  # o que o modelo disse ter usado
     mensagens: list[dict] = field(default_factory=list)
 
@@ -63,6 +64,7 @@ class Assistente:
             "pergunta": pergunta,
             "paciente_id": pid,
             "fontes": fontes,
+            "trechos": [d.page_content for d in docs],
             "mensagens": mensagens(pergunta, [d.page_content for d in docs], paciente_txt),
         }
 
@@ -73,6 +75,7 @@ class Assistente:
             texto=saida["texto"].strip(),
             paciente_id=saida["paciente_id"],
             fontes=saida["fontes"],
+            trechos=saida["trechos"],
             citadas=CITACAO.findall(saida["texto"]),
             mensagens=saida["mensagens"],
         )
