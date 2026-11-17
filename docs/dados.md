@@ -33,3 +33,11 @@ O paciente que chega no assistente só aparece como `P-0007`, com idade e sexo. 
 Na recusa com paciente, o exemplo avisa quando o remédio pedido tem relação com uma alergia do prontuário (o modelo não aprendeu isso direito, veja [fine_tuning.md](fine_tuning.md)). Na recusa sem condição nenhuma, ele só recusa, sem anexar protocolo. Todas as recusas terminam com a mesma frase, de propósito: o modelo aprende onde parar.
 
 O split é feito por grupo. O mesmo pedido ou tema nunca cai em dois conjuntos, e um paciente fica inteiro num conjunto só, em todos os tipos. Nos protocolos, duas das seis formas de cada pergunta ficam de fora do treino, uma de manual e uma solta, pra testar com pergunta que o modelo nunca viu.
+
+## Um defeito que achei depois do treino
+
+O gerador da base sorteia até duas alergias por paciente, e a lista de onde ele sorteia inclui "nenhuma conhecida". Faltou impedir que as duas coisas saíssem juntas. Resultado: 8 dos 40 pacientes (P-0007, P-0009, P-0011, P-0015, P-0016, P-0021, P-0028 e P-0039) têm no prontuário algo como "nenhuma conhecida, iodo". Isso aparece no bloco do paciente dentro do prompt, inclusive nos exemplos de treino.
+
+As respostas não saem erradas por causa disso. Tudo que usa alergia ignora "nenhuma conhecida" quando existe uma alergia real: as respostas esperadas do dataset, a regra de alergia, a conferência de fidelidade e os alertas do fluxo. Então o P-0007 aparece como alérgico a iodo em todo lugar que importa.
+
+Só percebi no code review final, com o modelo já treinado e avaliado. Corrigir o gerador muda o prompt desses 8 pacientes, e aí o dataset do repositório deixaria de ser o que treinou o modelo. Pra manter as duas coisas iguais, eu teria que retreinar e refazer a avaliação inteira. Preferi deixar os dados como estão e registrar aqui. Numa próxima versão, a correção é uma linha em `data/synthetic.py`: se sortear uma alergia real, tirar o "nenhuma conhecida".

@@ -182,6 +182,7 @@ Onde o v2 ainda erra (exemplos em `evaluation/erros.md`): responde "não recebi 
 
 ## 8. Limitações e próximos passos
 
+- Defeito nos dados sintéticos: 8 dos 40 pacientes têm "nenhuma conhecida" junto com uma alergia real, por um erro no gerador que só achei depois do treino. O código ignora "nenhuma conhecida" quando há alergia real, então as respostas saem certas, mas a contradição aparece no prompt. Não corrigi pro dataset do repositório continuar sendo o que treinou o modelo. Detalhes em `docs/dados.md`.
 - Amostras pequenas: são de 8 a 60 perguntas por tipo, e só 1 caso de conflito de alergia no teste e 3 no fora do molde.
 - O teste usa os moldes do treino, e fui eu quem escreveu as perguntas dos dois lados. As 10 perguntas livres de protocolo do fora do molde são as que usei pra ajustar o retriever, então o número mede a geração dado o trecho certo.
 - As métricas são regras. Medem se citou a fonte certa, não se a resposta é clinicamente correta. Nenhum médico leu nada, e o baseline é um modelo do mesmo tamanho.
