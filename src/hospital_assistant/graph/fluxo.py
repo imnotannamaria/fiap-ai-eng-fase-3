@@ -27,6 +27,7 @@ from hospital_assistant.data.anonymize import anonimizar
 from hospital_assistant.data.protocols import PROTOCOLS
 from hospital_assistant.graph import regras
 from hospital_assistant.graph.alertas import FilaDeAlertas
+from hospital_assistant.safety.alergias import AlertaAlergia
 from hospital_assistant.safety.auditoria import Auditoria
 from hospital_assistant.safety.seguro import aplicar_seguranca
 
@@ -127,9 +128,7 @@ class FluxoPaciente:
         alertas = regras.avaliar_alertas(e["paciente"], POR_ID[e["protocolo_id"]])
         ja_tem = {a["texto"] for a in alertas}
         for a in e["veredito"]["alertas"]:  # alergia achada na sugestão do modelo
-            texto = (f"ALERTA DE ALERGIA: o prontuário do paciente {a['paciente_id']} registra alergia a {a['alergia']}, e {a['termo']} tem relação direta com essa alergia [PRONTUARIO {a['paciente_id']}]."
-                     if a["tipo"] == "direta" else
-                     f"ATENÇÃO: o prontuário do paciente {a['paciente_id']} registra alergia a {a['alergia']}, e {a['termo']} pode ter reação cruzada com ela. Confirmar com o médico responsável [PRONTUARIO {a['paciente_id']}].")
+            texto = AlertaAlergia(**a).texto
             if texto not in ja_tem:
                 alertas.append({"nivel": "crítico" if a["tipo"] == "direta" else "atenção", "tipo": "alergia_na_sugestao",
                                 "fonte": f"PRONTUARIO {a['paciente_id']}", "texto": texto})

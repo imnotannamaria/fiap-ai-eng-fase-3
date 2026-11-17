@@ -32,8 +32,8 @@ GENERICAS = {"adulto", "agudo", "aguda", "trato", "suspeita", "dor", "adquirida"
 
 STOPWORDS = set(
     "a o as os um uma uns umas de do da dos das em no na nos nas por para pra com sem sobre e ou que qual quais quando "
-    "como se eu ele ela nele dele voce ja so mais muito tem ter tenho tô to esta estao esta ser sao foi pode posso "
-    "devo deve me meu minha nosso nossa isso esse essa aqui la aqui protocolo hospital paciente caso chegou algum "
+    "como se eu ele ela nele dele voce ja so mais muito tem ter tenho to esta estao ser sao foi pode posso "
+    "devo deve me meu minha nosso nossa isso esse essa aqui la protocolo hospital paciente caso chegou algum "
     "alguem pedir peco faco fazer "
     # palavras que dizem QUAL CAMPO o médico quer, não de que doença ele fala
     "alergia alergias medicacao medicacoes tratamento decidir precise saber antes algo alguma usa deixar passar "
@@ -63,6 +63,7 @@ def normalizar(texto: str) -> str:
 
 def tokenizar(texto: str) -> list[str]:
     tokens = re.findall(r"[a-z0-9]+", normalizar(texto))
+    # corta em 6 letras, um radical simples: "pendente" e "pendentes", "infeccao" e "infeccioso" viram o mesmo token
     return [t[:6] for t in tokens if t not in STOPWORDS and len(t) > 1]
 
 

@@ -10,10 +10,10 @@ from collections import defaultdict
 
 from hospital_assistant.assistant.retriever import normalizar
 from hospital_assistant.safety.validador import (
-    CITACAO, LISTA_ALERGIAS, LISTA_PENDENTES, LISTA_RESULTADOS, PADRAO_DOSE, POSOLOGIA, PRESCRICAO, checar_fidelidade,
+    CITACAO, LIMITE_CARACTERES, LISTA_ALERGIAS, LISTA_PENDENTES, LISTA_RESULTADOS, PADRAO_DOSE, POSOLOGIA, PRESCRICAO,
+    checar_fidelidade,
 )
 
-LIMITE_CARACTERES = 1800
 ALERTA = re.compile(r"ALERTA DE ALERGIA|ATENÇÃO:")
 
 # Frases livres, pra não punir o modelo base por dizer a mesma coisa com outras palavras.

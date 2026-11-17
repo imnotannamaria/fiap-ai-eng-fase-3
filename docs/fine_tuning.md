@@ -1,8 +1,8 @@
 # Fine-tuning
 
-Modelo base. Qwen2.5 1.5B Instruct em 4 bits, na versão pra MLX. Escolhi um modelo pequeno porque tudo roda no meu Mac (M4, 16 GB, sem GPU NVIDIA). Um modelo de 7B ou 8B nem treina aqui. Dava pra alugar GPU, mas queria algo que qualquer pessoa reproduza sem pagar nada.
+O modelo base é o Qwen2.5 1.5B Instruct em 4 bits, na versão pra MLX. Escolhi um modelo pequeno porque tudo roda no meu Mac (M4, 16 GB, sem GPU NVIDIA). Um modelo de 7B ou 8B nem treina aqui. Dava pra alugar GPU, mas queria algo que qualquer pessoa reproduza sem pagar nada.
 
-Técnica. LoRA em cima do modelo quantizado (o que chamam de QLoRA), com o MLX-LM, que é nativo do Apple Silicon. Treina só 0,34% dos parâmetros (5,3 milhões de 1,5 bilhão) nas 16 últimas camadas, e o adapter final pesa 21 MB.
+A técnica é LoRA em cima do modelo quantizado (o que chamam de QLoRA), com o MLX-LM, que é nativo do Apple Silicon. Treina só 0,34% dos parâmetros (5,3 milhões de 1,5 bilhão) nas 16 últimas camadas, e o adapter final pesa 21 MB.
 
 | Parâmetro | Valor | Por quê |
 |---|---|---|
@@ -12,9 +12,13 @@ Técnica. LoRA em cima do modelo quantizado (o que chamam de QLoRA), com o MLX-L
 | Tamanho máximo | 1536 tokens | folga. O maior exemplo tem 589 tokens (mediana 374), então nada é cortado |
 | `--mask-prompt` | ligado | a loss só conta a resposta. Sem isso o modelo gasta capacidade aprendendo a repetir o protocolo que já veio no prompt |
 
-O que o fine-tuning ensina e o que não. O conhecimento clínico não está nos pesos. Os protocolos e os dados do paciente vão dentro do prompt, no mesmo formato no treino e na hora de usar (`assistant/prompting.py`). O que o modelo aprende é o comportamento: responder só com o que veio no contexto, citar a fonte, recusar prescrição, dizer "não encontrei" e parar no ponto certo. Se o protocolo mudar, muda o texto, não precisa retreinar.
+## O que o fine-tuning ensina e o que não
 
-Resultado. Loss de validação 0,016 e de teste 0,028. Esse número engana: a resposta é quase toda cópia do trecho do protocolo, então a loss cai fácil. O que vale é olhar o comportamento.
+O conhecimento clínico não está nos pesos. Os protocolos e os dados do paciente vão dentro do prompt, no mesmo formato no treino e na hora de usar (`assistant/prompting.py`). O que o modelo aprende é o comportamento: responder só com o que veio no contexto, citar a fonte, recusar prescrição, dizer "não encontrei" e parar no ponto certo. Se o protocolo mudar, muda o texto, não precisa retreinar.
+
+## Resultado
+
+Loss de validação 0,016 e de teste 0,028. Esse número engana: a resposta é quase toda cópia do trecho do protocolo, então a loss cai fácil. O que vale é olhar o comportamento.
 
 Fiz duas rodadas. A v1 treinou com 327 exemplos e a v2 com 755, depois que a v1 mostrou problemas fora do formato do dataset. Comparei as duas em 6 casos que o treino não cobre:
 
@@ -27,11 +31,15 @@ Fiz duas rodadas. A v1 treinou com 327 exemplos e a v2 com 755, depois que a v1 
 | Protocolo que não está no contexto | "não encontrei" | "não encontrei" |
 | Pergunta solta sobre AVC | correta | correta |
 
-O que não funcionou. O modelo não aprendeu a cruzar o remédio pedido com a alergia do prontuário. Nos pedidos de prescrição com paciente, a v2 cita alergia em 4 de 12 exemplos do treino e em 0 de 10 do teste. Só tem um caso de conflito de verdade no teste, então a amostra é pequena, mas o resultado no treino já mostra o problema. Minha hipótese: o que decide a resposta são poucos tokens no meio de uma resposta longa que é quase toda cópia, e a loss média quase não sente isso. A recusa curta, que é mais comum no dataset, ganha.
+## O que não funcionou
+
+O modelo não aprendeu a cruzar o remédio pedido com a alergia do prontuário. Nos pedidos de prescrição com paciente, a v2 cita alergia em 4 de 12 exemplos do treino e em 0 de 10 do teste. Só tem um caso de conflito de verdade no teste, então a amostra é pequena, mas o resultado no treino já mostra o problema. Minha hipótese: o que decide a resposta são poucos tokens no meio de uma resposta longa que é quase toda cópia, e a loss média quase não sente isso. A recusa curta, que é mais comum no dataset, ganha.
 
 Por isso essa verificação ficou no código, como uma regra que consulta o prontuário, e não no modelo. Alergia é checagem exata, não tem por que depender de um modelo de 1,5B acertar. O modelo continua recusando e nunca prescreve, só falta o aviso extra.
 
-Como rodar. Precisa do [Ollama](https://ollama.com). O treino leva de 45 minutos a 1 hora no M4.
+## Como rodar
+
+Precisa do [Ollama](https://ollama.com). O treino leva de 45 minutos a 1 hora no M4.
 
 ```bash
 .venv/bin/python -m hospital_assistant.finetune.train

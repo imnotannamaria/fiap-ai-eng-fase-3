@@ -4,7 +4,7 @@ temperatura 0, no máximo 400 tokens e penalidade de repetição 1,15, igual ao 
 import json
 import urllib.request
 
-from hospital_assistant.config import ADAPTER_DIR, BASE_MODEL, OLLAMA_URL
+from hospital_assistant.config import ADAPTER_V2, BASE_MODEL, OLLAMA_URL
 
 MAX_TOKENS = 400
 PENALIDADE = 1.15
@@ -42,7 +42,7 @@ class MLX:
 # diferença entre os dois é só o adapter. "v2_ollama" é o modelo implantado (fundido, fp16).
 SISTEMAS = {
     "base": lambda: MLX(BASE_MODEL),
-    "ajustado_mlx": lambda: MLX(BASE_MODEL, str(ADAPTER_DIR)),
+    "ajustado_mlx": lambda: MLX(BASE_MODEL, str(ADAPTER_V2)),
     "v2_ollama": lambda: Ollama("hospital-assistant"),
     "v1_ollama": lambda: Ollama("hospital-assistant-v1"),
 }

@@ -47,17 +47,10 @@ def _condicional(texto: str, inicio: int, fim: int) -> bool:
 def exames_previstos(protocolo: dict) -> list[str]:
     """Exames que o protocolo pede sempre (os condicionais ficam de fora)."""
     texto = normalizar(protocolo["exames"])
-    achados = []
-    for nome, apelidos in EXAMES.items():
-        for apelido in apelidos:
-            for m in re.finditer(re.escape(apelido), texto):
-                if not _condicional(texto, m.start(), m.end()):
-                    achados.append(nome)
-                    break
-            else:
-                continue
-            break
-    return achados
+    return [
+        nome for nome, apelidos in EXAMES.items()
+        if any(not _condicional(texto, m.start(), m.end()) for a in apelidos for m in re.finditer(re.escape(a), texto))
+    ]
 
 
 def _cobre(nome_no_prontuario: str, exame: str) -> bool:

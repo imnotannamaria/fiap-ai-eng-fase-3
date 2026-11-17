@@ -130,4 +130,5 @@ def resposta_segura(trechos: list[str], paciente: dict | None = None) -> str:
 
 
 def garantir_fecho(texto: str) -> str:
-    return texto if re.search(r"m[eé]dico", texto, re.I) else f"{texto}\n\n{FECHO_PADRAO}"
+    # "médico" sozinho não basta: a conduta de anafilaxia diz "chamar o médico" e não é o fecho
+    return texto if re.search(r"m[eé]dico respons[aá]vel|assinada pelo m[eé]dico", texto, re.I) else f"{texto}\n\n{FECHO_PADRAO}"

@@ -37,7 +37,7 @@ class Veredito:
 
 def aplicar_seguranca(pergunta: str, texto_do_modelo: str, trechos: list[str], fontes: list[dict], paciente: dict | None) -> Veredito:
     """Regra de alergia, validação da saída e troca por resposta segura. Usado pelo
-    AssistenteSeguro e pelo fluxo do LangGraph, pra os dois seguirem a mesma regra."""
+    AssistenteSeguro e pelo fluxo do LangGraph, pros dois seguirem a mesma regra."""
     alertas = checar_alergia(paciente, pergunta, texto_do_modelo)
     validacao = validar_saida(texto_do_modelo, fontes, paciente)
     corpo = texto_do_modelo if validacao.ok else resposta_segura(trechos, paciente)

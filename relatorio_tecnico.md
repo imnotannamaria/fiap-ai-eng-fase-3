@@ -6,7 +6,7 @@ As fases 1 e 2 trabalharam com um classificador de tumores de mama e uma explica
 
 O enunciado pede fine-tuning de um LLM com dados do hospital, um assistente com LangChain, fluxos com LangGraph, segurança com log de auditoria e explicabilidade, e uma avaliação do modelo. Tudo isso está no repositório, e este relatório explica as escolhas e os resultados. O README tem os comandos pra rodar tudo, e a pasta `docs/` tem o detalhe de cada parte.
 
-Duas decisões valem pra o resto do documento:
+Duas decisões valem pro resto do documento:
 
 - Os dados são sintéticos. Eu não tenho acesso a dados reais de hospital, e usar prontuário real sem governança seria um problema por si só. Os protocolos são textos fictícios, escritos sem nenhuma dose de remédio, e servem só de material didático. O enunciado sugere PubMedQA e MedQuAD, e eu não usei nenhum dos dois: são em inglês, trazem literatura médica pública e não os protocolos internos de um hospital, que é o que o assistente precisa aprender. Misturar inglês também diluiria o comportamento em português que o modelo pequeno precisa aprender com poucos exemplos.
 - O limite de atuação não depende do modelo. Um modelo de 1,5B pode ser enganado. Cada regra de segurança tem uma camada de código por cima dele, e a avaliação mede as duas coisas separadas: o que o modelo faz sozinho e o que chega ao médico.
@@ -51,11 +51,17 @@ Técnica: LoRA em cima do modelo quantizado (QLoRA) com MLX-LM. Treina 0,34% dos
 
 O treino leva de 45 minutos a 1 hora. A sessão caiu na iteração 270, e eu retomei do checkpoint da 200. Depois o adapter é fundido ao modelo (2,9 GB em fp16) e importado no Ollama por um `Modelfile`.
 
-O que o fine-tuning ensina e o que não ensina. O conhecimento clínico não está nos pesos. Protocolos e dados do paciente vão dentro do prompt, no mesmo formato no treino e na hora de usar. O modelo aprende comportamento: usar só o que veio no contexto, citar a fonte, recusar prescrição, dizer "não encontrei" e parar no ponto certo. Se um protocolo mudar, muda o texto, sem retreinar.
+### O que o fine-tuning ensina e o que não ensina
 
-Resultado. Loss de validação 0,016 e de teste 0,028. Esse número engana, porque a resposta é quase toda cópia do trecho do protocolo e a loss cai fácil. Por isso o que vale está na seção 7, onde olho o comportamento.
+O conhecimento clínico não está nos pesos. Protocolos e dados do paciente vão dentro do prompt, no mesmo formato no treino e na hora de usar. O modelo aprende comportamento: usar só o que veio no contexto, citar a fonte, recusar prescrição, dizer "não encontrei" e parar no ponto certo. Se um protocolo mudar, muda o texto, sem retreinar.
 
-O que não funcionou. O modelo não aprendeu a cruzar o remédio pedido com a alergia do prontuário: nos pedidos de prescrição com paciente, citou alergia em 4 de 12 exemplos de treino e em 0 de 10 do teste. Minha hipótese é que o que decide a resposta são poucos tokens no meio de uma resposta longa que é quase toda cópia, e a loss média quase não sente isso. Em vez de tentar mais uma rodada de treino, essa checagem virou regra de código (seção 5). Alergia é verificação exata, e não tem por que depender de um modelo de 1,5B acertar.
+### Resultado
+
+Loss de validação 0,016 e de teste 0,028. Esse número engana, porque a resposta é quase toda cópia do trecho do protocolo e a loss cai fácil. Por isso o que vale está na seção 7, onde olho o comportamento.
+
+### O que não funcionou
+
+O modelo não aprendeu a cruzar o remédio pedido com a alergia do prontuário: nos pedidos de prescrição com paciente, citou alergia em 4 de 12 exemplos de treino e em 0 de 10 do teste. Minha hipótese é que o que decide a resposta são poucos tokens no meio de uma resposta longa que é quase toda cópia, e a loss média quase não sente isso. Em vez de tentar mais uma rodada de treino, essa checagem virou regra de código (seção 5). Alergia é verificação exata, e não tem por que depender de um modelo de 1,5B acertar.
 
 ## 4. O assistente (LangChain)
 
@@ -72,13 +78,21 @@ flowchart LR
     LLM --> R[Resposta<br/>texto e fontes]
 ```
 
-Quem decide o quê. O código busca o protocolo e o prontuário. O modelo só escreve a resposta com o que recebeu. Não deixei o modelo escolher quando consultar o prontuário (o que seria um agente com ferramentas) porque um modelo de 1,5B decidindo isso sozinho seria um ponto frágil justamente na parte de segurança. A chain usa a ferramenta `consultar_paciente` (um `@tool` do LangChain) pra montar o contexto do prompt. `listar_exames_pendentes` e `buscar_protocolo` existem e têm teste, mas nenhum agente as chama neste projeto. O fluxo do LangGraph chama direto as funções de `prontuario.py`.
+### Quem decide o quê
 
-Retriever. BM25, em dois passos. Primeiro acha o protocolo: o BM25 olha título, sinônimos, definição e critérios, e o protocolo só vale se a pergunta citar algo que o identifica (título ou sinônimo). Só com a nota não funcionava: "como trato uma queimadura?" tinha nota 3,1 por causa de "trato urinário", mais alta que "AVC" (1,7). Depois escolhe o trecho: regras de palavras-chave definem se a pergunta é sobre conduta, exames, alertas, critérios, definição ou atenção. Escolhi BM25 em vez de embeddings porque são 10 protocolos e dá pra mostrar por que cada trecho veio, com nota, protocolo e campo nos metadados.
+O código busca o protocolo e o prontuário. O modelo só escreve a resposta com o que recebeu. Não deixei o modelo escolher quando consultar o prontuário (o que seria um agente com ferramentas) porque um modelo de 1,5B decidindo isso sozinho seria um ponto frágil justamente na parte de segurança. A chain usa a ferramenta `consultar_paciente` (um `@tool` do LangChain) pra montar o contexto do prompt. `listar_exames_pendentes` e `buscar_protocolo` existem e têm teste, mas nenhum agente as chama neste projeto. O fluxo do LangGraph chama direto as funções de `prontuario.py`.
 
-Explicabilidade. A resposta carrega o texto, as fontes entregues ao modelo, as fontes que o modelo disse ter usado e as mensagens enviadas. Toda resposta cita `[PROT-001]` ou o prontuário, e o log guarda tudo.
+### Retriever
 
-Prompt igual ao do treino. A chain usa o mesmo código que gerou o dataset. Um teste refaz o prompt dos 240 exemplos com paciente e compara com o do treino, e os 240 batem.
+BM25, em dois passos. Primeiro acha o protocolo: o BM25 olha título, sinônimos, definição e critérios, e o protocolo só vale se a pergunta citar algo que o identifica (título ou sinônimo). Só com a nota não funcionava: "como trato uma queimadura?" tinha nota 3,1 por causa de "trato urinário", mais alta que "AVC" (1,7). Depois escolhe o trecho: regras de palavras-chave definem se a pergunta é sobre conduta, exames, alertas, critérios, definição ou atenção. Escolhi BM25 em vez de embeddings porque são 10 protocolos e dá pra mostrar por que cada trecho veio, com nota, protocolo e campo nos metadados.
+
+### Explicabilidade
+
+A resposta carrega o texto, as fontes entregues ao modelo, as fontes que o modelo disse ter usado e as mensagens enviadas. Toda resposta cita `[PROT-001]` ou o prontuário, e o log guarda tudo.
+
+### Prompt igual ao do treino
+
+A chain usa o mesmo código que gerou o dataset. Um teste refaz o prompt dos 240 exemplos com paciente e compara com o do treino, e os 240 batem.
 
 ## 5. Segurança e auditoria
 
@@ -168,12 +182,12 @@ Onde o v2 ainda erra (exemplos em `evaluation/erros.md`): responde "não recebi 
 
 ## 8. Limitações e próximos passos
 
-- Amostras pequenas. São de 8 a 60 perguntas por tipo, e só 1 caso de conflito de alergia no teste e 3 no fora do molde.
+- Amostras pequenas: são de 8 a 60 perguntas por tipo, e só 1 caso de conflito de alergia no teste e 3 no fora do molde.
 - O teste usa os moldes do treino, e fui eu quem escreveu as perguntas dos dois lados. As 10 perguntas livres de protocolo do fora do molde são as que usei pra ajustar o retriever, então o número mede a geração dado o trecho certo.
 - As métricas são regras. Medem se citou a fonte certa, não se a resposta é clinicamente correta. Nenhum médico leu nada, e o baseline é um modelo do mesmo tamanho.
-- Regras manuais. A escolha do campo por palavras-chave, os sinônimos dos protocolos e a tabela de alergias foram escritos à mão. Não escalam sem outra abordagem, e a tabela não tem nome comercial nem erro de digitação.
+- Regras manuais: a escolha do campo por palavras-chave, os sinônimos dos protocolos e a tabela de alergias foram escritos à mão. Não escalam sem outra abordagem, e a tabela não tem nome comercial nem erro de digitação.
 - O validador só conhece o que as regras conhecem. Posologia escrita de outro jeito passa.
-- Infraestrutura de protótipo. O estado do fluxo fica em memória (reiniciar perde fluxos aguardando médico), a fila de alertas é um arquivo, e o hash encadeado mostra adulteração mas não impede. A anonimização do log é por regex e não pega nome digitado.
-- Alerta sem critério clínico. Resultado alterado vira alerta crítico sem olhar qual exame é.
+- Infraestrutura de protótipo: o estado do fluxo fica em memória (reiniciar perde fluxos aguardando médico), a fila de alertas é um arquivo, e o hash encadeado mostra adulteração mas não impede. A anonimização do log é por regex e não pega nome digitado.
+- Alerta sem critério clínico: resultado alterado vira alerta crítico sem olhar qual exame é.
 
 Próximos passos, se fosse seguir: uma v3 com mais exemplos de recusa com paciente pra ver se o modelo aprende o aviso de alergia, avaliação com médicos, checkpointer persistente no fluxo e comparação com um modelo maior. Em um uso real, nada disso dispensa governança de dados, conformidade com a LGPD, controle de acesso e aprovação clínica.

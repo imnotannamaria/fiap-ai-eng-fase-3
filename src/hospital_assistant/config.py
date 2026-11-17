@@ -16,7 +16,8 @@ LOGS = RAIZ / "logs"
 MODELS = RAIZ / "models"
 
 BASE_MODEL = os.getenv("BASE_MODEL", "mlx-community/Qwen2.5-1.5B-Instruct-4bit")
-ADAPTER_DIR = MODELS / "adapters"
+ADAPTER_DIR = MODELS / "adapters"  # onde o treino grava
+ADAPTER_V2 = RAIZ / "adapters" / "v2"  # adapter da v2, versionado no repositório
 FUSED_DIR = MODELS / "fused"
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "hospital-assistant")
 OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")

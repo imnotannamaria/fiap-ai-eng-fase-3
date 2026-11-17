@@ -30,7 +30,9 @@ O grafo para no médico. Em `revisao_humana` o grafo faz uma pausa (`interrupt` 
 
 Se o modelo cair, o fluxo continua. Se o Ollama estiver fora do ar, o passo da sugestão registra "LLM indisponível" e o plano sai com o texto do protocolo sem alteração, mais os dados do prontuário calculados por código.
 
-Auditoria. O fluxo grava dois eventos no mesmo log encadeado: `fluxo_gerado` (alertas, o que o modelo disse, a decisão da validação, os passos e o hash do plano) e `decisao_medica` (quem decidiu, o quê, e o mesmo hash do plano). O hash igual nos dois mostra que o médico decidiu sobre aquele plano. Fluxo encerrado (paciente não achado) também fica registrado.
+## Auditoria
+
+O fluxo grava dois eventos no mesmo log encadeado: `fluxo_gerado` (alertas, o que o modelo disse, a decisão da validação, os passos e o hash do plano) e `decisao_medica` (quem decidiu, o quê, e o mesmo hash do plano). O hash igual nos dois mostra que o médico decidiu sobre aquele plano. Fluxo encerrado (paciente não achado) também fica registrado.
 
 Pra rodar:
 

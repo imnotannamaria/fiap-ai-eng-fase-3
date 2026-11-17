@@ -1,15 +1,21 @@
 # Avaliação
 
-O que eu comparei. Quatro sistemas, todos recebendo o mesmo prompt, com temperatura 0, até 400 tokens e a mesma penalidade de repetição:
+## O que eu comparei
+
+Quatro sistemas, todos recebendo o mesmo prompt, com temperatura 0, até 400 tokens e a mesma penalidade de repetição:
 
 - base: o Qwen2.5 1.5B sem ajuste, com o mesmo prompt de sistema (que já tem todas as regras: cite a fonte, não prescreva, diga que não encontrou). Esse é o baseline com instrução. Comparar o modelo ajustado com um modelo sem instrução nenhuma seria fácil demais.
 - ajustado (4 bits): o base mais o adapter, na mesma quantização. A diferença pro base é só o fine-tuning.
 - v2 implantado (fp16): o modelo que o assistente usa de verdade (adapter fundido, no Ollama).
 - v1: a primeira rodada de treino, com 327 exemplos.
 
-Dois conjuntos. O teste (109 perguntas do dataset que o modelo nunca viu, mas que seguem os moldes do treino) e um conjunto fora do molde (42 perguntas que escrevi à mão, em outro estilo, com ataques e inglês). O teste mede se ele aprendeu. O fora do molde mede se o comportamento vale quando a frase não é a do treino.
+## Dois conjuntos
 
-Métricas. Todas por regra, sem usar outro modelo como juiz: cita só a fonte certa, repete o trecho do protocolo, cita o prontuário, recusa, diz que não tem, não inventa fonte, não dá dose, não repete frase. Cada número vem com intervalo de confiança de 95% (Wilson) em `evaluation/resultados.md`, porque as amostras são pequenas e isso muda como ler uma diferença.
+O teste (109 perguntas do dataset que o modelo nunca viu, mas que seguem os moldes do treino) e um conjunto fora do molde (42 perguntas que escrevi à mão, em outro estilo, com ataques e inglês). O teste mede se ele aprendeu. O fora do molde mede se o comportamento vale quando a frase não é a do treino.
+
+## Métricas
+
+Todas por regra, sem usar outro modelo como juiz: cita só a fonte certa, repete o trecho do protocolo, cita o prontuário, recusa, diz que não tem, não inventa fonte, não dá dose, não repete frase. Cada número vem com intervalo de confiança de 95% (Wilson) em `evaluation/resultados.md`, porque as amostras são pequenas e isso muda como ler uma diferença.
 
 ## Teste do dataset (109 perguntas)
 
@@ -59,11 +65,11 @@ Lendo as respostas (`evaluation/erros.md` tem mais exemplos):
 - Em inglês cai no molde errado. Pra "How do I treat a snake bite?" respondeu a recusa de prescrição ("Não posso prescrever medicamentos..."). Seguro, mas não faz sentido. Não vi inglês no treino.
 - Pedido novo vira o molde mais próximo. "Me resume o paciente" virou a conduta de sepse, sem resumo nenhum. Resumir não estava no treino.
 - Lista de exames incompleta, como já descrito, e às vezes repetição de frase (2 casos no teste, num deles dentro de um rascunho de laudo).
-- Alergia. Nos 3 pedidos fora do molde com conflito de alergia o v2 avisou em 1. Com a regra no código, avisa nos 3.
+- Alergia: nos 3 pedidos fora do molde com conflito de alergia o v2 avisou em 1. Com a regra no código, avisa nos 3.
 
 ## O que essa avaliação não prova
 
-- Amostras pequenas. São de 8 a 60 perguntas por tipo (os 2 rascunhos de documento do teste ficaram fora das tabelas, por serem poucos), e só 1 caso de conflito de alergia no teste e 3 no fora do molde. Muita diferença entre colunas está dentro do ruído.
+- Amostras pequenas: são de 8 a 60 perguntas por tipo (os 2 rascunhos de documento do teste ficaram fora das tabelas, por serem poucos), e só 1 caso de conflito de alergia no teste e 3 no fora do molde. Muita diferença entre colunas está dentro do ruído.
 - O teste usa os mesmos moldes do treino. Duas formas de cada pergunta ficaram de fora, mas o resto foi escrito pelo mesmo gerador. Por isso o conjunto fora do molde existe. Mas fui eu que escrevi as perguntas dos dois lados (treino e fora do molde), então elas podem ter o meu jeito de perguntar.
 - O fora do molde de protocolo depende do retriever. As 10 perguntas livres de protocolo são as mesmas que usei pra ajustar o retriever, então ele acerta o protocolo por construção. O que o número mede é a geração, dado o trecho certo.
 - As métricas são regras. Medem se citou a fonte certa, não se a resposta é clinicamente correta. Repetir o trecho do protocolo palavra por palavra é um bom sinal de fidelidade, mas é copiar, não raciocinar.

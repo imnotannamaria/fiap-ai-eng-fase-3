@@ -117,7 +117,7 @@ CAMPOS = {
 }
 
 # As 3 primeiras formas de cada pergunta são "de manual". As 3 últimas são como o médico
-# fala de verdade, mais solta. O treino vê só algumas, pra o teste ter forma nunca vista.
+# fala de verdade, mais solta. O treino vê só algumas, pro teste ter forma nunca vista.
 PERGUNTAS = {
     "definicao": [
         "O que o protocolo define como {t}?",
